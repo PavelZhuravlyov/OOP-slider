@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>Slider</title>
+	<link rel="stylesheet" href="css/normalize.css"/>
+	<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+	<div class="wrapper">
+
+		<form action="#" class="wr-form_datas">
+			<input type="text" placeholder="Данные..." name="datas" class="wr-form_datas-inp" value />
+			<button class="wr-form_datas-btn">Сохранить</button>
+		</form>
+
+		<div class="wr-download" style="display: none"></div>	
+		<div class="wr-blocks-w"></div>
+
+		
+		<div class="slider-main-w">
+			<div class="slider-w">
+				<a href="#" data-slide="1" class="slider-arrow"></a>
+				<a href="#" data-slide="-1" class="slider-arrow"></a>
+			</div>
+		</div>
+	</div>
+
+
+	<script id="template" type="text/x-handlebars-template">
+		{{#each fotos}}
+			<div class="wr-block">
+				<div class="wr-block-img-w">
+					<div class="loading">
+						<span class="loading-big"></span>
+						<span class="loading-small"></span>
+					</div>
+					<img src="{{foto}}" alt="" class="wr-block-img"/>	
+				</div>
+				<form class="wr-block-comment">
+					<label class="wr-block-comment-lb">
+						<span class="wr-block-comment-lb-text">Комментарий:</span>
+						<input type="text" name="comment" class="wr-block-comment-lb-inp"/>
+					</label>
+				</form>
+				<a href="#" class="wr-block-delete">Удалить</a>
+				<label class="wr-block-select_active">
+					<input type="radio" name="activeSlide" value="{{slideNumber}}" class="wr-block-select_active-radio"/>
+					<span class="wr-block-select_active-text">Сделать слайд активным <span class="small-round"></span></span>
+				</label>
+			</div>
+		{{/each}}
+		<button class="wr-form_blocks-btn generate-slider">Сгенерировать слайдер</button>
+	</script>
+
+	<script id="errorPopUp" type="text/x-handlebars-template">
+		<div class="errMes">
+			<h1 class="errMes-head">{{title}}</h1>
+			<p class="errMes-text">{{text}}</p>
+		</div>
+	</script>
+
+	<script id="sliderList" type="text/x-handlebars-template">
+		<ul class="slider">
+		    {{#each slide}}
+		        <li class="slider-img" data-item="{{slideNumber}}">
+		        	<img src="{{foto}}" alt=""/>
+					<div class="slider-img-comment">{{comment}}</div>
+		        </li>
+		    {{/each}}
+		</ul>
+	</script>
+
+	<script id="slider-navigation" type="text/-handlebars-template">
+		<div class="slider-navigation">
+			{{#each slide}}
+				<span class="slider-navigation-circle" data-item="{{slideNumber}}"></span>
+			{{/each}}
+		</div>
+	</script>
+
+	<script src="js/jquery.js"></script>
+	<script src="js/handlebars.js"></script>
+	<script src="js/anim.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>

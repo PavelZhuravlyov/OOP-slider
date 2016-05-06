@@ -1,0 +1,442 @@
+borderWidthLoading = 2px
+borderColorLoading = #8E8989
+
+
+*
+	margin 0
+	padding 0
+	
+body
+	font-family "Tahoma", sans-serif, "Arial"
+	padding-top 50px
+	
+.body-bg
+	cursor pointer
+	&:before
+		content ''
+		position fixed
+		top 0
+		left 0
+		right 0
+		bottom 0
+		z-index 12
+		opacity 0
+		cursor pointer
+	
+a
+	color black
+	text-decoration none
+	
+ul
+	list-style-type none
+
+.wrapper
+	// overflow hidden
+	
+.wr-form_datas
+	width 450px
+	margin 0px auto
+	position absolute
+	top 100px
+	right 50%
+	margin-right -225px; 
+	transition all .5s ease 0s
+
+
+	&-inp
+		display inline-block
+		vertical-align middle
+		outline none
+		border 0
+		height 35px
+		line-height 35px
+		font-size 16px
+		box-shadow 0px 0px 6px 2px rgba(black, .5)
+		border-radius 5px
+		width 300px
+		padding 0 15px
+		box-sizing border-box
+		margin 6px 0
+	
+	&-btn
+		cursor pointer
+		display inline-block
+		vertical-align middle
+		outline none
+		height 37px
+		line-height 34px
+		color white
+		background #5cb85c
+		border 1px solid #4cae4c
+		border-radius 5px
+		padding 0 10px
+		
+		&:hover
+			background-color #449d44
+			border-color #398439
+			
+.wr-blocks-w
+	width 550px
+	margin 50px auto 0
+	text-align center
+	display none
+
+.wr-block-img-w
+	display inline-block
+	vertical-align middle
+	position relative
+	margin-right 20px
+
+.wr-block
+	margin-bottom 30px
+	text-align left
+	
+	&-img
+		display inline-block
+		vertical-align middle
+		width 100px
+		height 100px
+		border 1px solid #c2c2c2	
+		position relative 
+		z-index 2
+		
+	&-comment
+		display inline-block
+		vertical-align middle
+		margin -25px 20px 0 0
+		
+		&-lb-text
+			display block
+			margin-bottom 15px
+			color #8E8989
+			font-size 18px
+			
+		&-lb-inp
+			width 300px	
+			border 0
+			outline 0
+			height 35px
+			line-height 35px 
+			font-size 16px
+			box-shadow 0px 0px 6px 2px rgba(black, .5)
+			border-radius 5px
+			padding 0 15px
+			box-sizing border-box
+	
+	&-select_active
+		display block
+		text-align center
+		
+		
+		&-text
+			font-size 18px
+			position relative
+			display inline-block
+			vertical-align top
+			padding-right 25px
+			cursor pointer
+			
+			&::before
+				content ''
+				position absolute
+				top 50%
+				right 0
+				width 15px
+				height 15px
+				border 2px solid black
+				border-radius 50%
+				margin-top -8px
+				
+			&::after
+				content ''
+				position absolute
+				top 50%
+				right 4px
+				width 11px
+				height 11px
+				border 0px
+				border-radius 50%
+				margin-top -4px
+				background black
+				display none
+		
+		&-radio
+			opacity 0
+			
+			&:checked + .wr-block-select_active-text > .small-round	
+				display block
+
+	&-delete
+		display inline-block
+		vertical-align middle
+		color #8E8989
+		
+		&:hover
+			color black
+			border-bottom 1px dashed black
+			
+.small-round
+	position absolute
+	top 50%
+	right 4px
+	width 11px
+	height 11px
+	border 0px
+	border-radius 50%
+	margin-top -4px
+	background black
+	display none
+
+.wr-form_blocks-btn
+	cursor pointer
+	display inline-block
+	vertical-align middle
+	outline none
+	height 37px
+	line-height 34px
+	color white
+	background #5cb85c
+	border 1px solid #4cae4c
+	border-radius 5px
+	padding 0 10px
+	box-sizing border-box
+	
+	&:hover
+		background-color #449d44
+		border-color #398439
+
+.slider-main-w
+	background #345
+	padding 30px
+	// position absolute
+	// top 0
+	// left -3000px
+
+.slider-w
+	width 600px
+	height 400px
+	margin 0px auto 10px
+	position relative
+	// overflow hidden 
+	border-radius 5px
+	// opacity 0
+	
+.slider 
+	padding 0
+	width 100%
+	position absolute
+	top 0
+	left 0
+	white-space nowrap
+	// transition all .5s
+	font-size 0
+	
+	&-img
+		display inline-block
+		vertical-align top
+		width 100%
+		height 400px
+		font-size 16px
+		position relative
+		
+		img
+			display block
+			width 100%
+			height 100%
+			
+		&-comment
+			position absolute
+			bottom 0
+			left 0
+			right 0
+			height 50px
+			background #1A9AC5
+			z-index 2
+			color white
+			padding 5px 10px
+			box-sizing border-box
+			border-radius 3px 3px 0px 0px
+	
+	&-navigation
+		text-align center
+		cursor default
+		
+		&-circle
+			display inline-block
+			vertical-align top
+			width 15px
+			height 15px
+			background #907373
+			border-radius 50%
+			margin-left 5px
+			cursor pointer
+			
+			&:hover
+				background #f2f2f2
+			
+			&.active
+				background #f2f2f2
+
+.one 
+	background #ccc
+	height 100%
+	
+.two
+	background #8e8e8e
+	height 100%
+	
+.three
+	background #000
+	height 100%
+
+.four
+	background #d1ddd1
+	height 100%
+
+.five
+	background blue
+	height 100%
+	
+.slider-arrow
+	position absolute
+	top 50%
+	left 5px
+	width 40px
+	height 40px
+	background 	white
+	z-index 2	
+	margin-top -20px
+	border-radius 50%
+	
+	&:hover
+		box-shadow 0px 0px 6px 3px rgba(black, .5)
+	
+	&::before
+		content ''
+		position absolute
+		top 50%
+		left 50%
+		width 26px
+		height 26px
+		margin -13px 0 0 -13px
+		background url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAABF0lEQVRoQ93auw1CMQwF0MsGjMIIMAlsBiPBJoyALD0aOuL7sV6aVHZy4sqRD9jJOuzEgS7kCOA94TE6kDuAE4DLBMwqpBC3rRLPCZhVSCEK811xzCqkAKMwHcgoTBcyBsOAjMCwIHEMExLFsCExjAISwaggdowSYsWoITaMA2LBuCByjBMixbghMkwCIsGkIHRMEkLFpCE0zETIC8D535+ZNOS3719CVFmTEBoiCaEiUhA6IgGRINwQGcIJkSJcEDnCAbEg1BAbQgmxIlQQO0IBiSDYkBiCCYkiWJA4ggEZgehCxiA6kFGIDuQB4FoJACy3p1s8Zeu0uoWpEY6/PwooN/9J0oFUql0M1SgedjlntyLLB7MDP4x0hDONWA4lAAAAAElFTkSuQmCC') center
+		background-size cover	
+	
+	&[data-slide="-1"]
+		&::before	
+			transform rotate(180deg)
+			margin -13px -13px 0 0
+			left inherit
+			rigth 50%
+
+.slider-arrow[data-slide="1"]
+	right 5px
+	left inherit
+			
+.wr-download
+	width 50px
+	height 50px
+	border-radius 50%
+	border 2px solid #000
+	border-right 0
+	border-bottom 0
+	margin 0 auto
+	position relative
+	animation: around-to 1700ms linear infinite
+	border 0
+	
+	&:before
+		content ''
+		position absolute
+		top 50%
+		left 50%
+		width 38px
+		height 38px
+		border-radius 50%
+		border 2px solid #000
+		margin -19px 0 0 -19px
+		border-bottom 0
+		border-right 0
+		animation: around-from 2000ms linear infinite
+		
+	&:after
+		content ''
+		position absolute
+		top 50%
+		left 50%
+		width 20px
+		height 20px
+		border-radius 50%
+		border 2px solid #000
+		margin -10px 0 0 -10px
+		border-bottom 0
+		border-right 0
+		animation: around-to 2000ms linear infinite
+		
+.errMes
+	position fixed
+	top 30px
+	right 50px
+	width 450px
+	height 150px
+	padding 15px 20px
+	box-sizing border-box
+	border-radius 3px
+	background #D6D2D2
+	color #E04646
+	
+	&-head
+		margin 0 0 15px
+		font-size 24px
+	
+	&-text
+		font-size 18px
+		
+.loading
+	position absolute
+	top 50%
+	left 50%
+	margin -50px 0 0 -50px
+	width 100px
+	height 100px
+
+	&-big
+		border-radius 50%
+		border borderWidthLoading solid borderColorLoading
+		border-top-color transparent
+		position absolute
+		top 50%
+		left 50%
+		width 20px
+		height 20px 
+		margin -11px 0 0 -11px
+		animation load-right 1.5s linear infinite  
+	
+	&-small
+		border-radius 50%
+		border borderWidthLoading solid borderColorLoading
+		border-bottom-color transparent
+		position absolute
+		top 50%
+		left 50%
+		width 10px
+		height 10px 
+		margin -6px 0 0 -6px
+		animation load-left 1.5s linear infinite 
+	
+
+@keyframes load-right
+	100%
+		transform rotate(360deg)
+		
+@keyframes load-left
+	100%
+		transform rotate(-360deg)
+
+@keyframes around-to
+	100%
+		transform rotate(360deg)
+		
+@keyframes around-from
+	100%
+		transform rotate(360deg)
