@@ -178,15 +178,31 @@ $(document).ready(function(){
 		
 		$.fn.Slider = function(options){
 
-			var $slider     = this,
-				$slide      = $slider.children(),
-				countSlides = $slide.length - 1,
-				settings = $.extend( {
-			      activeClass : 'slider-active',
-			      activePos : 0,
-			      slideWidth : $slide.outerWidth()
+			var $slider          = this,
+				$arrSlides       = $slider.children(),
+				$arrSlidesDef    = $arrSlides,
+				countSlides      = $arrSlides.length - 1,
+				settings         = $.extend({
+			      activeClass    : 'slider-active',
+			      activePos      : 0,
+			      timeStep       : 3000,
+			      slideWidth     : $arrSlides.outerWidth(),
+			      arrows         : true
 			    }, options),
-			    indexActiveSlide;
+			    slideWidth       = settings.slideWidth, 
+			    indexActiveSlide = settings.activePos,
+			    slideStartIndex  = 1,
+			    slideEndIndex,
+			    inter;
+
+			this.addArrows = function(){
+				if(settings.arrows){
+					$slider.after("\
+						<a href=\"#\" data-slide=\"1\" class=\"slider-arrow\"></a>\
+						<a href=\"#\" data-slide=\"-1\" class=\"slider-arrow\"></a>"
+					);
+				}
+			}
 
 
 			this.clearAttrs = function($elem){
@@ -194,7 +210,7 @@ $(document).ready(function(){
 			}
 
 			this.copySlide = function(indexSlide){
-				return this.clearAttrs($slide.eq(indexSlide).clone());
+				return this.clearAttrs($arrSlides.eq(indexSlide).clone());
 			}
 
 			this.addSlidesToEnd = function(){
@@ -206,41 +222,82 @@ $(document).ready(function(){
 			}
 
 			this.setActiveSlide = function(){
-				$slide.eq(settings.activePos).addClass(settings.activeClass);
+				$arrSlides.eq(settings.activePos).addClass(settings.activeClass);
+
+				$arrSlides    = $slider.children();
+				countSlides   = $arrSlides.length - 1;
+				slideEndIndex = countSlides - 3;
 			}
 
-			this.moveToActive = function(indexActiveSlide){
-				indexActiveSlide = $slide.eq(settings.activePos)[0].childElementCount;
+			this.moveToActive = function(){
+				toSlide = $arrSlides.eq(indexActiveSlide).index() + 2;
+				console.log(indexActiveSlide);
 
-				$slider.animate({
-					'left': -settings.slideWidth * indexActiveSlide
-				})
+				$slider.transition({
+					'left': -slideWidth * toSlide
+				}, function(){
+					console.log(indexActiveSlide, countSlides);
+					if(indexActiveSlide == slideEndIndex){
+						$slider.css({
+							'left': -slideWidth * 2
+						});
+						indexActiveSlide = slideStartIndex;	
+					}
+					else indexActiveSlide++;
+				});
 			}
 
-			this.move = function(callback){
-				indexActiveSlide += 1;
-				$slide.siblings().removeClass(settings.activeClass);
-				$slide.eq(indexActiveSlide).addClass(settings.activeClass);
-				console.log($slide.eq(settings.activePos)[0].childElementCount);
-				callback();
+			this.setActive = function(callback){
+				$arrSlidesDef.siblings().removeClass(settings.activeClass);
+				$arrSlidesDef.eq(indexActiveSlide).addClass(settings.activeClass);
+
+				if(callback && typeof callback == "function") callback();
+			}
+
+			this.intervalStart_Stop = function(interval, action, func){ // action = stop, action = start
+				if(action == "stop"){
+					clearInterval(interval);
+				}
+				else if(action == "start"){
+					interval = setInterval(func, settings.timeStep);
+				}
+			}
+
+			this.actionInterval = function(){
+				$slider.setActive(function(){
+					$slider.moveToActive();
+				});
+			}
+
+			this.arrowClickHandler = function(){
+				$(document).on('click', '.slider-arrow', function(){
+					var slideWay = $(this).data('slide');
+
+					$slider.intervalStart_Stop(inter, "stop");
+
+					if(slideWay < 0) {
+						indexActiveSlide -= 2;
+					}
+
+					// $slider.actionInterval();
+
+					$slider.intervalStart_Stop(inter, "start", $slider.actionInterval);
+
+					return false;
+				});
 			}
 
 			this.initSlider = function(){
+				this.addArrows();
 				this.addSlidesToEnd();
 				this.setActiveSlide();
 				this.moveToActive();
+				this.arrowClickHandler();
 
-				setTimeout(function(){
-					$slider.move(function(){
-						$slider.moveToActive();
-					});
-				}, 3000)	
+				inter = setInterval(this.actionInterval, settings.timeStep)	
 			}
 
 			this.initSlider();
-
-
-			// console.log($slide);	
 
 			return this;
 		}
