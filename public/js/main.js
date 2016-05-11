@@ -229,14 +229,14 @@ $(document).ready(function(){
 				slideEndIndex = countSlides - 3;
 			}
 
-			this.moveToActive = function(){
-				toSlide = $arrSlides.eq(indexActiveSlide).index() + 2;
-				console.log(indexActiveSlide);
+			this.moveToActive = function(data){
+				// var toSlide = $slider.find('.slider-active').index() + 1;
+				var toSlide = $arrSlides.eq(indexActiveSlide).index() + 2;
+				console.log(toSlide);
 
 				$slider.transition({
 					'left': -slideWidth * toSlide
 				}, function(){
-					console.log(indexActiveSlide, countSlides);
 					if(indexActiveSlide == slideEndIndex){
 						$slider.css({
 							'left': -slideWidth * 2
@@ -270,21 +270,7 @@ $(document).ready(function(){
 			}
 
 			this.arrowClickHandler = function(){
-				$(document).on('click', '.slider-arrow', function(){
-					var slideWay = $(this).data('slide');
-
-					$slider.intervalStart_Stop(inter, "stop");
-
-					if(slideWay < 0) {
-						indexActiveSlide -= 2;
-					}
-
-					// $slider.actionInterval();
-
-					$slider.intervalStart_Stop(inter, "start", $slider.actionInterval);
-
-					return false;
-				});
+				
 			}
 
 			this.initSlider = function(){
