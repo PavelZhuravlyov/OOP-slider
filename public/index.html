@@ -9,16 +9,16 @@
 <body>
 	<div class="wrapper">
 
-		<!-- <form action="#" class="wr-form_datas">
+		<form action="#" class="wr-form_datas">
 			<input type="text" placeholder="Данные..." name="datas" class="wr-form_datas-inp" value />
 			<button class="wr-form_datas-btn">Сохранить</button>
-		</form> -->
+		</form>
 
 		<div class="wr-download" style="display: none"></div>	
 		<div class="wr-blocks-w"></div>
-
 		
-		<div class="slider-main-w">
+		<!-- <div class="slider-main-w"></div> -->
+		<!-- <div class="slider-main-w">
 			<div class="slider-w">
 				<ul class="slider">
 			        <li class="slider-img" data-item="0">
@@ -38,24 +38,24 @@
 			        </li>
 				</ul>
 			</div>
-		</div>
+		</div> -->
 	</div>
 
 
 	<script id="prewiews" type="text/x-handlebars-template">
-		{{#each fotos}}
+		{{#each this}}
 			<div class="wr-block">
 				<div class="wr-block-img-w">
 					<div class="loading">
 						<span class="loading-big"></span>
 						<span class="loading-small"></span>
 					</div>
-					<img src="{{this}}" alt="" class="wr-block-img"/>	
+					<img src="{{foto}}" alt="" class="wr-block-img"/>	
 				</div>
 				<form class="wr-block-comment">
 					<label class="wr-block-comment-lb">
 						<span class="wr-block-comment-lb-text">Комментарий:</span>
-						<input type="text" name="comment" class="wr-block-comment-lb-inp"/>
+						<input type="text" name="comment" data-comment="{{@index}}" class="wr-block-comment-lb-inp" value="{{comment}}"/>
 					</label>
 				</form>
 				<a href="#" class="wr-block-delete" data-item="{{@index}}">Удалить</a>
@@ -76,14 +76,20 @@
 	</script>
 
 	<script id="sliderList" type="text/x-handlebars-template">
-		<ul class="slider">
-		    {{#each slide}}
-		        <li class="slider-img" data-item="{{slideNumber}}">
-		        	<img src="{{foto}}" alt=""/>
-					<div class="slider-img-comment">{{comment}}</div>
-		        </li>
-		    {{/each}}
-		</ul>
+		<div class="slider-main-w">
+			<div class="slider-w">
+				<ul class="slider">
+				    {{#each this}}
+				        <li class="slider-img" data-item="{{@index}}">
+				        	<img src="{{foto}}" alt=""/>
+				        	{{#if comment}}
+								<div class="slider-img-comment">{{comment}}</div>
+							{{/if}}
+				        </li>
+				    {{/each}}
+				</ul>
+			</div>
+		</div>
 	</script>
 
 	<script id="slider-navigation" type="text/-handlebars-template">
@@ -97,6 +103,7 @@
 	<script src="js/jquery.js"></script>
 	<script src="js/handlebars.js"></script>
 	<script src="js/anim.js"></script>
+	<script src="js/slider.js"></script>
 	<script src="js/main.js"></script>
 </body>
 </html>

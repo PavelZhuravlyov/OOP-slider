@@ -3,7 +3,8 @@ $(document).ready(function(){
 	(function(){
 		var templates = {
 			error: Handlebars.compile($('#errorPopUp').html()),
-			prewiews: Handlebars.compile($('#prewiews').html())
+			prewiews: Handlebars.compile($('#prewiews').html()),
+			sliderList: Handlebars.compile($('#sliderList').html())
 		};
 
 		function DataLinks(arrayUrls){
@@ -17,10 +18,11 @@ $(document).ready(function(){
 
 		DataLinks.prototype.stringToArray = function(){
 			var inputString = this.deleteTabs();
-			if(inputString === "") return false;
-			this.arrUrls = this.deleteTabs().split(',');
 
-			return this.arrUrls;
+			if(inputString === "") return false;
+			this.arrayUrls = inputString.split(',');
+
+			return this.arrayUrls;
 		}
 
 		DataLinks.prototype.arrToObj = function(arrUrls){
@@ -28,39 +30,35 @@ $(document).ready(function(){
 			var obj = {
 				'fotos': arrUrls
 			};
-
 			return obj;
 		}
-		DataLinks.prototype.addActiveField = function(){
-
-		}
-
+		
 		DataLinks.prototype.arrayToArrObjs = function(activeIndex){
-			var arrObjects = [],
-				arrUrls    = this.arrUrls;
+			var arrObjects  = [],
+				arrUrls     = this.arrayUrls,
+				activeIndex = activeIndex || 0;
 
 			for(var i=0; i<arrUrls.length; i++){
 				if(i == activeIndex){
 					arrObjects[i] = { 
 						foto: arrUrls[i],
-						active: true
+						active: true,
+						comment: ''
 					};
 				}
 				else{
 					arrObjects[i] = { 
-						foto: arrUrls[i]
+						foto: arrUrls[i],
+						comment: ''
 					};
 				}
 			}
-
 			return arrObjects;
 		}
 
-		
-
 		// Обработчик ошибок
 		function ErrorHandler(classErrWindow){
-			this.timeHide       = 3000;
+			this.timeHide       = 2000;
 			this.classErrWindow = classErrWindow;
 		}
 
@@ -72,8 +70,8 @@ $(document).ready(function(){
 			var errWindow = $(this.classErrWindow);
 
 			setTimeout(function(){
-				$('.errMes').fadeOut(this.timeHide, function(){
-					$('.errMes').remove();
+				errWindow.fadeOut(this.timeHide, function(){
+					errWindow.remove();
 				});
 			}, this.timeHide);
 		}
@@ -83,28 +81,32 @@ $(document).ready(function(){
 			this.hideErrorWindow();
 		}
 
+		ErrorHandler.checkError = function(errorOpt, consoleMessage){
+			errorHandler.caughtErr(errorOpt);
+			throw new Error(consoleMessage || "Error");
+		}
+
 
 		var errorHandler = new ErrorHandler('.errMes'),
-			arrUrls      = [],
-			inputStr     = {};
-
-		var activeIndex = 0;
+			inputStr     = '',
+			activeIndex  = 0,
+			objSlides;
 
 		$(document).on('click', '.wr-form_datas-btn', function(){
-			var input    = $('.wr-form_datas-inp').val(),
-				objUrls;
+			var input  = $('.wr-form_datas-inp').val();
 			
-			inputStr = new DataLinks(input);
-			objUrls  = inputStr.arrToObj();
-			arrUrls = inputStr.stringToArray();
+			inputStr   = new DataLinks(input);
+			objSlides  = inputStr.arrayToArrObjs();
 
-			if(!arrUrls){
-				errorHandler.caughtErr({title: 'Ошибка', message: 'Введите данные'});
-				return false;
+			if(!objSlides){
+				ErrorHandler.checkError({
+					title: 'Ошибка', 
+					message: 'Введите данные'
+				}, "Datas is empty");
 			}
 
 			fadeBlock($('.wr-form_datas'), 2, function(){
-				$('.wr-blocks-w').append(templates.prewiews(objUrls)).fadeIn(500);
+				$('.wr-blocks-w').append(templates.prewiews(objSlides)).fadeIn(500);
 			});
 			
 			return false;
@@ -113,33 +115,48 @@ $(document).ready(function(){
 		$(document).on('click', '.wr-block-delete', function(){
 			var item      = $(this).data('item'),
 				winScrTop = $(window).scrollTop();
-			arrUrls.splice(item, 1);
 
-			$('.wr-blocks-w').html('').append(templates.prewiews(inputStr.arrToObj(arrUrls)));
+			objSlides.splice(item, 1);
+
+			$('.wr-blocks-w').html('').append(templates.prewiews(objSlides));
 			$(window).scrollTop(winScrTop);
-
-			console.log(item == activeIndex);
 
 			(item < activeIndex) ? newPosActiveIndex(1, item) : 
 			(item > activeIndex) ? newPosActiveIndex(0, item) : newPosActiveIndex(-1, item); 
-			console.log(activeIndex);
 
 			return false;
 		});
 
-		$(document).on('change', '.wr-block-select_active-radio', function(){
-			
+		$(document).on('change', '.wr-block-select_active-radio', function(){	
 			activeIndex = parseInt($(this).val());
 		});
 
-		$(document).on('click', '.generate-slider', function(){
+		$(document).on('change', '.wr-block-comment-lb-inp', function(){
+			var numberComment = parseInt($(this).data('comment')),
+				textComment   = $(this).val();
 
-			console.log(inputStr.arrayToArrObjs(activeIndex));
+			objSlides[numberComment]['comment'] = textComment;
 		});
 
+		$(document).on('click', '.generate-slider', function(){
+			if(!objSlides.length){
+				ErrorHandler.checkError({
+					title: 'Ошибка', 
+					message: 'Нет ни одного слайда'
+				}, "Datas is empty");
+			}
+
+			fadeBlock($('.wr-blocks-w'), 1, function(){
+				$('.wrapper').append(templates.sliderList(objSlides)).fadeIn(500, function(){
+					$('.slider').Slider({
+						activeClass: 'slider-active',
+						activePos: activeIndex
+					});
+				});
+			});
+		});
 
 		
-
 		function newPosActiveIndex(shift, item){
 			var shift = shift || 0;
 
@@ -172,155 +189,5 @@ $(document).ready(function(){
 			}
 			if(callback && typeof callback == "function") callback();
 		}
-	})();
-
-	(function(){
-		
-		$.fn.Slider = function(options){
-
-			var $slider          = this,
-				$arrSlides       = $slider.children(),
-				$arrSlidesDef    = $arrSlides,
-				countSlides      = $arrSlides.length - 1,
-				settings         = $.extend({
-			      activeClass    : 'slider-active',
-			      activePos      : 0,
-			      timeStep       : 7000,
-			      slideWidth     : $arrSlides.outerWidth(),
-			      arrows         : true
-			    }, options),
-			    slideWidth       = settings.slideWidth, 
-			    indexActiveSlide = settings.activePos + 2,
-			    slideStartIndex  = 2,
-			    slideEndIndex,
-			    inter;
-
-			function cancelClick(){
-				$('body').addClass('body-bg');
-				setTimeout(function(){
-					$('body').removeClass('body-bg');
-				}, 500);
-			}
-
-			this.addArrows = function(){
-				if(settings.arrows){
-					$slider.after("\
-						<a href=\"#\" data-slide=\"1\" class=\"slider-arrow\"></a>\
-						<a href=\"#\" data-slide=\"-1\" class=\"slider-arrow\"></a>"
-					);
-				}
-			}
-
-			this.clearAttrs = function($elem){
-				return $elem.removeAttr('data-item');
-			}
-
-			this.copySlide = function(indexSlide){
-				return this.clearAttrs($arrSlides.eq(indexSlide).clone());
-			}
-
-			this.addSlidesToEnd = function(){
-				$slider.append(this.copySlide(0));
-				$slider.append(this.copySlide(1));
-
-				$slider.prepend(this.copySlide(countSlides));
-				$slider.prepend(this.copySlide(countSlides-1));
-			}
-
-			this.setActiveSlide = function(){
-				$arrSlides = $slider.children();
-				
-				$slider.children('*[data-item="'+ settings.activePos +'"]').addClass(settings.activeClass);
-				$slider.move(indexActiveSlide);
-				
-				countSlides   = $arrSlides.length - 1;
-				slideEndIndex = countSlides - 1;
-			}
-
-			this.getIndexActiveSlide = function(){
-				return $slider.children('.' + settings.activeClass).index();
-			}
-
-			this.changeActiveSlide = function(nextSlide){
-				$arrSlides.siblings().removeClass(settings.activeClass);
-				$arrSlides.eq(nextSlide).addClass(settings.activeClass);
-			}
-
-			this.invisibleMoveSlider = function(indexPosition, movingPosition){
-				$slider.move(indexPosition, function(){
-					$slider.css({
-						'left': -slideWidth * movingPosition
-					});
-					$slider.changeActiveSlide(movingPosition);
-				});
-			}
-
-			this.checkSlide = function(dataSlide){
-				var dataSlide = dataSlide || 1,
-					nextSlide = $slider.getIndexActiveSlide() + dataSlide;
-
-				if(nextSlide == slideEndIndex){
-					$slider.invisibleMoveSlider(nextSlide, slideStartIndex);
-				}
-				else if(nextSlide == (slideStartIndex-1)){
-					$slider.invisibleMoveSlider(nextSlide, slideEndIndex-1);	
-				}
-				else {
-					$slider.move(nextSlide);
-					$slider.changeActiveSlide(nextSlide);
-				}	
-			}
-
-			this.move = function(indexPos, callback){
-				$slider.transition({
-					'left': -slideWidth * indexPos
-				}, 500, function(){
-					if(callback && typeof callback == "function") callback();
-				});	
-			}
-
-			this.startTimer = function(timer, func){
-				return setInterval(function(){
-							$slider.checkSlide();
-						}, settings.timeStep);
-			}
-
-			this.arrowClickHandler = function(){
-				$(document).on('click', '.slider-arrow', function(){
-					var dataSlide = parseInt($(this).data('slide'));
-					clearInterval(inter);
-
-					cancelClick();
-					$slider.checkSlide(dataSlide);
-
-					inter = $slider.startTimer(inter);
-
-					return false;
-				});
-			}
-
-			this.initSlider = function(){
-				 
-				if((settings.activePos > $arrSlidesDef.length) || (settings.activePos < 0)){
-					throw new Error("Active position undefined");
-				}
-
-				this.addArrows();
-				this.addSlidesToEnd();
-				this.setActiveSlide();	
-				this.arrowClickHandler();
-
-				inter = $slider.startTimer(inter);
-			}
-
-			this.initSlider();
-
-			return this;
-		}
-
-		$('.slider').Slider({
-			activeClass: 'slider-active'
-		});
-
 	})();
 });
