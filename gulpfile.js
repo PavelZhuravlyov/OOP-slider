@@ -1,7 +1,7 @@
   var 
       gulp = require('gulp'),
 
-      stylus = require('gulp-stylus'),
+      sass = require('gulp-sass'),
 
       concat = require('gulp-concat'),
 
@@ -24,24 +24,34 @@
       path = require('path'),
 
       browserSync = require('browser-sync').create();
-
-
-    
+ 
     gulp.task('html', function(){
         return gulp.src('development/**/*.html')
             .pipe(gulp.dest('public'));
     });
 
-    gulp.task('styles', function() {
-        return gulp.src('development/styles/**/*.styl', { since: gulp.lastRun('styles') })
+    gulp.task('sass', function() {
+        return gulp.src('development/styles/**/*.scss', { since: gulp.lastRun('sass') })
             .pipe(sourcemaps.init())
-            .pipe(remember('styles'))
-            .pipe(concat('style.styl'))
-            .pipe(stylus()).on('error', notify.onError({
-                title: "Stylus"
+            .pipe(remember('sass'))
+            .pipe(concat('style.scss'))
+            .pipe(sass()).on('error', notify.onError({
+                title: "SASS"
+            }))
+            .pipe(autoprefixer({
+              browsers: ['Last 2 versions', 'Firefox <= 20', 'IE <= 10'],
+              cascade: false
             }))
             .pipe(sourcemaps.write())
             .pipe(gulp.dest('public/css'));
+    });
+
+    gulp.task('concatJS', function(){
+      return gulp.src(['./development/js/error.js', './development/js/slider.js', './development/js/prevSlider.js', './development/js/main.js'])
+            .pipe(sourcemaps.init())
+            .pipe(concat('main.js'))
+            .pipe(sourcemaps.write())
+            .pipe(gulp.dest('./public/js/'));
     });
 
     gulp.task('serve', function() {
@@ -51,13 +61,14 @@
         browserSync.watch('public/**/*.*').on('change', browserSync.reload);
     });
 
-    gulp.task('build', gulp.parallel('html', 'styles'));
+    gulp.task('build', gulp.parallel('html', 'sass', 'concatJS'));
 
     gulp.task('watch', function() {
-        gulp.watch('development/styles/**/*.styl', gulp.series('styles')).on('unlink', function(filepath) {
-            remember.forget('styles', path.resolve(filepath));
+        gulp.watch('development/styles/**/*.scss', gulp.series('sass')).on('unlink', function(filepath) {
+            remember.forget('sass', path.resolve(filepath));
         });
         gulp.watch('development/**/*.html', gulp.series('html'));
+        gulp.watch('development/**/*.js', gulp.series('concatJS'));
     });
 
     gulp.task('default', gulp.series('build', gulp.parallel('serve', 'watch')));

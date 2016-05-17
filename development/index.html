@@ -8,49 +8,50 @@
 </head>
 <body>
 	<div class="wrapper">
-
 		<form action="#" class="wr-form_datas">
 			<input type="text" placeholder="Данные..." name="datas" class="wr-form_datas-inp" value />
 			<button class="wr-form_datas-btn">Сохранить</button>
 		</form>
-
-		<div class="wr-download" style="display: none"></div>	
-		<div class="wr-blocks-w"></div>
-
-		
-		<div class="slider-main-w">
-			<div class="slider-w">
-				<a href="#" data-slide="1" class="slider-arrow"></a>
-				<a href="#" data-slide="-1" class="slider-arrow"></a>
-			</div>
-		</div>
 	</div>
 
+	<script id="inputLinks" type="text/x-handlebars-template">
+		<form action="#" class="wr-form_datas">
+			<input type="text" placeholder="Данные..." name="datas" class="wr-form_datas-inp" value />
+			<button class="wr-form_datas-btn">Сохранить</button>
+		</form>
+	</script>
 
-	<script id="template" type="text/x-handlebars-template">
-		{{#each fotos}}
-			<div class="wr-block">
-				<div class="wr-block-img-w">
-					<div class="loading">
-						<span class="loading-big"></span>
-						<span class="loading-small"></span>
+	<script id="prewiews" type="text/x-handlebars-template">
+		<div class="wr-blocks-w">
+			<a href="#" class="step-down" data-to="inputLinks"><Вернуться к шагу 1</a>
+			{{#each this}}
+				<div class="wr-block">
+					<div class="wr-block-img-w">
+						<div class="loading">
+							<span class="loading-big"></span>
+							<span class="loading-small"></span>
+						</div>
+						<img src="{{foto}}" alt="" class="wr-block-img"/>	
 					</div>
-					<img src="{{foto}}" alt="" class="wr-block-img"/>	
-				</div>
-				<form class="wr-block-comment">
-					<label class="wr-block-comment-lb">
-						<span class="wr-block-comment-lb-text">Комментарий:</span>
-						<input type="text" name="comment" class="wr-block-comment-lb-inp"/>
+					<form class="wr-block-comment">
+						<label class="wr-block-comment-lb">
+							<span class="wr-block-comment-lb-text">Комментарий:</span>
+							<input type="text" name="comment" data-comment="{{@index}}" class="wr-block-comment-lb-inp" value="{{comment}}"/>
+						</label>
+						<label class="wr-block-comment-lb">
+							<span class="wr-block-comment-lb-text">Ссылка:</span>
+							<input type="text" name="link" data-comment="{{@index}}" class="wr-block-link-lb-inp" value="{{comment}}"/>
+						</label>
+					</form>
+					<a href="#" class="wr-block-delete" data-item="{{@index}}">Удалить</a>
+					<label class="wr-block-select_active">
+						<input type="radio" name="activeSlide" value="{{@index}}" class="wr-block-select_active-radio"/>
+						<span class="wr-block-select_active-text">Сделать слайд активным <span class="small-round"></span></span>
 					</label>
-				</form>
-				<a href="#" class="wr-block-delete">Удалить</a>
-				<label class="wr-block-select_active">
-					<input type="radio" name="activeSlide" value="{{slideNumber}}" class="wr-block-select_active-radio"/>
-					<span class="wr-block-select_active-text">Сделать слайд активным <span class="small-round"></span></span>
-				</label>
-			</div>
-		{{/each}}
-		<button class="wr-form_blocks-btn generate-slider">Сгенерировать слайдер</button>
+				</div>
+			{{/each}}
+			<button class="wr-form_blocks-btn generate-slider">Сгенерировать слайдер</button>
+		</div>
 	</script>
 
 	<script id="errorPopUp" type="text/x-handlebars-template">
@@ -61,14 +62,21 @@
 	</script>
 
 	<script id="sliderList" type="text/x-handlebars-template">
-		<ul class="slider">
-		    {{#each slide}}
-		        <li class="slider-img" data-item="{{slideNumber}}">
-		        	<img src="{{foto}}" alt=""/>
-					<div class="slider-img-comment">{{comment}}</div>
-		        </li>
-		    {{/each}}
-		</ul>
+		<a href="#" class="step-down" data-to="prewiews"><Вернуться к шагу 2</a>
+		<div class="slider-main-w">
+			<div class="slider-w">
+				<ul class="slider">
+				    {{#each this}}
+				        <li class="slider-img" data-item="{{@index}}">
+				        	<img src="{{foto}}" alt=""/>
+				        	{{#if comment}}
+								<div class="slider-img-comment">{{comment}}</div>
+							{{/if}}
+				        </li>
+				    {{/each}}
+				</ul>
+			</div>
+		</div>
 	</script>
 
 	<script id="slider-navigation" type="text/-handlebars-template">
