@@ -77,8 +77,8 @@ ul{	list-style-type: none; }
 		&-circle { 
 			display: inline-block;	vertical-align: top; width: 15px;	height: 15px;	background: #907373; border-radius: 50%; margin-left: 5px; cursor: pointer;
 			&:hover {	background: #f2f2f2; }
-			&.active { background: #f2f2f2; }
 		}
+		&-circle-active { background: #f2f2f2; }
 	}
 }
 	

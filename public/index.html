@@ -83,8 +83,8 @@
 
 	<script id="slider-navigation" type="text/-handlebars-template">
 		<div class="slider-navigation">
-			{{#each slide}}
-				<span class="slider-navigation-circle" data-item="{{slideNumber}}"></span>
+			{{#each this}}
+				<span class="slider-navigation-circle" data-slide="{{@index}}"></span>
 			{{/each}}
 		</div>
 	</script>
