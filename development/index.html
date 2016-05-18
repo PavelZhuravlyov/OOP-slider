@@ -40,7 +40,7 @@
 						</label>
 						<label class="wr-block-comment-lb">
 							<span class="wr-block-comment-lb-text">Ссылка:</span>
-							<input type="text" name="link" data-comment="{{@index}}" class="wr-block-link-lb-inp" value="{{comment}}"/>
+							<input type="text" name="link" data-comment="{{@index}}" class="wr-block-link-lb-inp" value=""/>
 						</label>
 					</form>
 					<a href="#" class="wr-block-delete" data-item="{{@index}}">Удалить</a>
@@ -57,7 +57,7 @@
 	<script id="errorPopUp" type="text/x-handlebars-template">
 		<div class="errMes">
 			<h1 class="errMes-head">{{title}}</h1>
-			<p class="errMes-text">{{text}}</p>
+			<p class="errMes-text">{{message}}</p>
 		</div>
 	</script>
 
@@ -66,14 +66,16 @@
 		<div class="slider-main-w">
 			<div class="slider-w">
 				<ul class="slider">
-				    {{#each this}}
-				        <li class="slider-img" data-item="{{@index}}">
-				        	<img src="{{foto}}" alt=""/>
-				        	{{#if comment}}
-								<div class="slider-img-comment">{{comment}}</div>
-							{{/if}}
-				        </li>
-				    {{/each}}
+					{{addSlides this this.length}}
+					    {{#each this}}
+					        <li class="slider-img" data-item="{{@index}}">
+					        	<img src="{{foto}}" alt=""/>
+					        	{{#if comment}}
+									<div class="slider-img-comment">{{comment}}</div>
+								{{/if}}
+					        </li>
+					    {{/each}}
+				    {{addSlides this 2}}
 				</ul>
 			</div>
 		</div>
