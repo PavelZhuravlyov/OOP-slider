@@ -40,14 +40,10 @@
 						</label>
 						<label class="wr-block-comment-lb">
 							<span class="wr-block-comment-lb-text">Ссылка:</span>
-							<input type="text" name="link" data-comment="{{@index}}" class="wr-block-link-lb-inp" value=""/>
+							<input type="text" name="link" data-link="{{@index}}" class="wr-block-link-lb-inp" value="{{link}}"/>
 						</label>
 					</form>
 					<a href="#" class="wr-block-delete" data-item="{{@index}}">Удалить</a>
-					<label class="wr-block-select_active">
-						<input type="radio" name="activeSlide" value="{{@index}}" class="wr-block-select_active-radio"/>
-						<span class="wr-block-select_active-text">Сделать слайд активным <span class="small-round"></span></span>
-					</label>
 				</div>
 			{{/each}}
 			<button class="wr-form_blocks-btn generate-slider">Сгенерировать слайдер</button>
@@ -69,23 +65,22 @@
 					{{addSlides this this.length}}
 					    {{#each this}}
 					        <li class="slider-img" data-item="{{@index}}">
-					        	<img src="{{foto}}" alt=""/>
-					        	{{#if comment}}
-									<div class="slider-img-comment">{{comment}}</div>
-								{{/if}}
+					        	{{#wrapLink link}}
+						        	<img src="{{foto}}" alt=""/>
+						        	{{#if comment}}
+										<div class="slider-img-comment">{{comment}}</div>
+									{{/if}}
+								{{/wrapLink}}
 					        </li>
 					    {{/each}}
 				    {{addSlides this 2}}
 				</ul>
 			</div>
-		</div>
-	</script>
-
-	<script id="slider-navigation" type="text/-handlebars-template">
-		<div class="slider-navigation">
-			{{#each this}}
-				<span class="slider-navigation-circle" data-slide="{{@index}}"></span>
-			{{/each}}
+			<div class="slider-navigation">
+				{{#each this}}
+					<span class="slider-navigation-circle" data-slide="{{@index}}"></span>
+				{{/each}}
+			</div>
 		</div>
 	</script>
 
