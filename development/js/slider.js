@@ -143,7 +143,7 @@ Slider.prototype.changeOpacity = function() {
 }
 
 // Обработчик клика на кнопки переключения
-Slider.prototype.ClickHandler = function() {
+Slider.prototype.clickHandler = function() {
 	var _this = this;
 
 	$(document).on('click', '.slider-arrow', function() {
@@ -152,7 +152,7 @@ Slider.prototype.ClickHandler = function() {
 
 		_this.cancelClick();
 		_this.checkSlide(_dataSlide);
-		_this.ballsSetActive(_this.ballActivePos-1, false); // ballActivePos - 1, тк при перемещении слайдера он увеличился на 1 
+		_this.ballsSetActive(_this.ballActivePos-1, false); // ballActivePos - 1, тк при перемещении слайдера он увеличился на 1(checkSlide->ballsSetActive) 
 
 		_this.interval = _this.startTimer(_this.interval);
 
@@ -190,7 +190,7 @@ Slider.prototype.initSlider = function(){
 
 	this.addArrows();
 	this.setActiveSlide();	
-	this.ClickHandler();
+	this.clickHandler();
 	this.ballsSetActive(this.settings.activePos);
 	this.changeOpacity();
 	this.interval = this.startTimer(this.interval);
