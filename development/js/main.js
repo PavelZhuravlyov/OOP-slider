@@ -43,15 +43,16 @@ $(document).ready(function() {
 
 	$(document).on('click', '.wr-block-delete', function() {
 		var item      = $(this).data('item'),
-			  winScrTop = $(window).scrollTop();
+			  winScrTop = $(window).scrollTop(),
+			  checkedBtn;
 
 		objSlides.splice(item, 1);
+		activeIndex = selectActiveAfterDel(item, activeIndex);
 
 		$('.wrapper').html('').append(templates.prewiews(objSlides));
 		$(window).scrollTop(winScrTop);
 
-		activeIndex = selectActiveAfterDel(item, activeIndex);
-		if (activeIndex != null) {
+		if (typeof activeIndex != "undefined") {
 			$('.wr-block').eq(activeIndex).find('.wr-block-select_active-text').trigger('click');
 		} else {
 			activeIndex = 0;
@@ -69,7 +70,7 @@ $(document).ready(function() {
 
 	$(document).on('change', '.wr-block-link-lb-inp', function() {
 		var numberComment = parseInt($(this).data('link')),
-			 textComment   = $(this).val();
+			  textComment   = $(this).val();
 
 		objSlides[numberComment].link = textComment;
 	});
@@ -108,13 +109,11 @@ $(document).ready(function() {
 	// Ищет активный слайд после удаления хоть одного превью
 	function selectActiveAfterDel(item, activeIndex) {
 		if (item == activeIndex) {
-			return 0;
+			return;
 		} else if (item < activeIndex) {
 			return activeIndex - 1;
 		} else if (item > activeIndex){
 			return activeIndex;
-		} else {
-			return null;
 		}
 	}
 

@@ -194,6 +194,4 @@ Slider.prototype.initSlider = function(){
 	this.ballsSetActive(this.settings.activePos);
 	this.changeOpacity();
 	this.interval = this.startTimer(this.interval);
-
-	
 };
