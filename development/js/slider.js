@@ -160,11 +160,15 @@ Slider.prototype.ClickHandler = function() {
 	});
 
 	$(document).on('click', '.slider-navigation-circle', function() {
-		var _dataSlide = parseInt($(this).data('slide'));
+		var _dataSlide        = parseInt($(this).data('slide')),
+				_ballsClassActive = _this.settings.ballsClass + '-active';
+
+		if ($(this).hasClass(_ballsClassActive)) {
+			return false;
+		} 
+
 		clearInterval(_this.interval);
-
 		_this.ballsSetActive(_dataSlide, true);
-
 		_this.interval = _this.startTimer(_this.interval);
 
 		return false;
