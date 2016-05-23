@@ -14,7 +14,7 @@ ErrorHandler.prototype.newError = function(errorObject) {
 ErrorHandler.prototype.hideErrorWindow = function() {
 	var _errWindow = $(this.classErrWindow);
 
-	setTimeout(function(){
+	setTimeout(function() {
 		_errWindow.fadeOut(this.timeHide, function() {
 			_errWindow.remove();
 		});

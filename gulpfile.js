@@ -1,31 +1,16 @@
   var 
-      gulp = require('gulp'),
-
-      sass = require('gulp-sass'),
-
-      concat = require('gulp-concat'),
-
+      gulp         = require('gulp'),
+      sass         = require('gulp-sass'),
+      concat       = require('gulp-concat'),
       autoprefixer = require('gulp-autoprefixer'),
-
-      sourcemaps = require('gulp-sourcemaps'),
-
-      uncss = require('gulp-uncss'),
-
-      watch = require('gulp-watch'),
-
-      del = require('del'),
-
-      notify = require('gulp-notify'),
-
-      remember = require('gulp-remember'),
-
-      debug = require('gulp-debug'),
-
-      path = require('path'),
-
-      browserSync = require('browser-sync').create();
+      sourcemaps   = require('gulp-sourcemaps'),
+      watch        = require('gulp-watch'),
+      notify       = require('gulp-notify'),
+      remember     = require('gulp-remember'),
+      path         = require('path'),
+      browserSync  = require('browser-sync').create();
  
-    gulp.task('html', function(){
+    gulp.task('html', function() {
         return gulp.src('development/**/*.html')
             .pipe(gulp.dest('public'));
     });
@@ -46,7 +31,7 @@
             .pipe(gulp.dest('public/css'));
     });
 
-    gulp.task('concatJS', function(){
+    gulp.task('concatJS', function() {
       return gulp.src(['./development/js/error.js', './development/js/slider.js', './development/js/prevSlider.js', './development/js/main.js'])
             .pipe(sourcemaps.init())
             .pipe(concat('main.js'))

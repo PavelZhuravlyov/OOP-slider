@@ -134,6 +134,14 @@ Slider.prototype.ballsSetActive = function(dataSlide, moveSlider) {
 	}
 };
 
+Slider.prototype.changeOpacity = function() {
+	var _this = this;
+
+	setTimeout(function() {
+		_this.$slider.css('opacity', 1);
+	}, 500);
+}
+
 // Обработчик клика на кнопки переключения
 Slider.prototype.ClickHandler = function() {
 	var _this = this;
@@ -172,6 +180,7 @@ Slider.prototype.initSlider = function(){
 
 	if (this.countSlides === 0) {
 		this.ballsSetActive(this.settings.activePos);
+		this.changeOpacity();
 		return false;
 	}
 
@@ -179,10 +188,8 @@ Slider.prototype.initSlider = function(){
 	this.setActiveSlide();	
 	this.ClickHandler();
 	this.ballsSetActive(this.settings.activePos);
-
+	this.changeOpacity();
 	this.interval = this.startTimer(this.interval);
 
-	setTimeout(function() {
-		_this.$slider.css('opacity', 1);
-	}, 500);
+	
 };

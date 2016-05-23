@@ -55,7 +55,7 @@ PrevSlider.prototype.copyArrayObjs = function(arrayObjs) {
 			    _newArray[_prop] = _value;
 			  }
 	    }
-		}
+	}
 
 	return _newArray;
 

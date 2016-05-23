@@ -44,6 +44,10 @@
 						</label>
 					</form>
 					<a href="#" class="wr-block-delete" data-item="{{@index}}">Удалить</a>
+					<label class="wr-block-select_active">
+						<input type="radio" name="activeSlide" value="{{@index}}" class="wr-block-select_active-radio"/>
+						<span class="wr-block-select_active-text">Сделать слайд активным <span class="small-round"></span></span>
+					</label>
 				</div>
 			{{/each}}
 			<button class="wr-form_blocks-btn generate-slider">Сгенерировать слайдер</button>

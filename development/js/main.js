@@ -37,6 +37,10 @@ $(document).ready(function() {
 		return false;
 	});
 
+	$(document).on('change', '.wr-block-select_active-radio', function() {	
+		activeIndex = parseInt($(this).val());
+	});
+
 	$(document).on('click', '.wr-block-delete', function() {
 		var item      = $(this).data('item'),
 			  winScrTop = $(window).scrollTop();
@@ -46,11 +50,14 @@ $(document).ready(function() {
 		$('.wrapper').html('').append(templates.prewiews(objSlides));
 		$(window).scrollTop(winScrTop);
 
-		return false;
-	});
+		// activeIndex = selectActiveAfterDel(item, activeIndex);
+		// if (activeIndex != null) {
+		// 	$('.wr-block').eq(activeIndex).find('.wr-block-select_active-text').trigger('click');
+		// } else {
+		// 	activeIndex = 0;
+		// }
 
-	$(document).on('change', '.wr-block-select_active-radio', function() {	
-		activeIndex = parseInt($(this).val());
+		return false;
 	});
 
 	$(document).on('change', '.wr-block-comment-lb-inp', function() {
@@ -98,6 +105,19 @@ $(document).ready(function() {
 		$('.wrapper').html( returnBlock( toBlock, templates, storeTemplates[toBlock] ));
 	});
 
+	// Ищет активный слайд после удаления хоть одного превью
+	function selectActiveAfterDel(item, activeIndex) {
+		if (item == activeIndex) {
+			return 0;
+		} else if (item < activeIndex) {
+			return activeIndex - 1;
+		} else if (item > activeIndex){
+			return activeIndex;
+		} else {
+			return null;
+		}
+	}
+
 	// функция, которая рендерит шаблон при возвращении к предыдущему шагу
 	function returnBlock(nameTemp, myTemplates, options) {
 		var options = options || {};
@@ -138,7 +158,7 @@ $(document).ready(function() {
 		var returningStr = '',
 			position     = position - 2;
 
-		if (obj.length < 2) return false;
+		if (obj.length < 2) return '';
 
 		for (var i = 2, j = position; i > 0; i--, j++ ) { 
 			returningStr += '<li class="slider-img""><img src="' + obj[j].foto + '" alt=""/>';
