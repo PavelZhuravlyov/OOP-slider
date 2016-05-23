@@ -50,12 +50,12 @@ $(document).ready(function() {
 		$('.wrapper').html('').append(templates.prewiews(objSlides));
 		$(window).scrollTop(winScrTop);
 
-		// activeIndex = selectActiveAfterDel(item, activeIndex);
-		// if (activeIndex != null) {
-		// 	$('.wr-block').eq(activeIndex).find('.wr-block-select_active-text').trigger('click');
-		// } else {
-		// 	activeIndex = 0;
-		// }
+		activeIndex = selectActiveAfterDel(item, activeIndex);
+		if (activeIndex != null) {
+			$('.wr-block').eq(activeIndex).find('.wr-block-select_active-text').trigger('click');
+		} else {
+			activeIndex = 0;
+		}
 
 		return false;
 	});
