@@ -2,10 +2,10 @@ $(document).ready(function() {
 
 (function(){
 	var _templates = {
-		inputLinks: Handlebars.compile($('#inputLinks').html()),
+		links: Handlebars.compile($('#links').html()),
 		error: Handlebars.compile($('#errorPopUp').html()),
 		prewiews: Handlebars.compile($('#prewiews').html()),
-		sliderList: Handlebars.compile($('#sliderList').html())
+		slider: Handlebars.compile($('#slider').html())
 	};
 
 	var 
@@ -14,10 +14,10 @@ $(document).ready(function() {
 		_prevSlider,
 		_objSlides;
 
-	$('.wrapper').html(_templates.inputLinks())
+	$('.js-wrapper').html(_templates.links());
 
 	$(document).on('click', '.js-save_datas', function() {
-		var inputStr = $('.wr-form_datas-inp').val();
+		var inputStr = $('.input-form_datas-inp').val();
 		
 		_prevSlider = new PrevSlider(inputStr);
 		_objSlides = _prevSlider.arrayToArrObjs(); 
@@ -29,8 +29,8 @@ $(document).ready(function() {
 			}, 'Datas is empty');
 		}
 
-		_fadeBlock($('.wr-form_datas'), 2, function() {
-			$('.wrapper').prepend(_templates.prewiews(_objSlides)).fadeIn(500);
+		_fadeBlock($('.js-input-form_datas'), 2, function() {
+			$('.js-wrapper').prepend(_templates.prewiews(_objSlides)).fadeIn(500);
 		});
 		
 		return false;
@@ -46,7 +46,7 @@ $(document).ready(function() {
 		var 
 			item = $(this).data('item'),
 			winScrTop = $(window).scrollTop(),
-			activePrev = $('.wr-block').eq(item).find('.js-active_btn').is(':checked');
+			activePrev = $('.prew-block').eq(item).find('.js-active_btn').is(':checked');
 
 		_objSlides.splice(item, 1);
 
@@ -54,7 +54,7 @@ $(document).ready(function() {
 			_activeIndex = _changeActiveIndex(_objSlides, 0, 0);
 		}
 
-		$('.wrapper').html(_templates.prewiews(_objSlides));
+		$('.js-wrapper').html(_templates.prewiews(_objSlides));
 		$(window).scrollTop(winScrTop);
 
 		return false;
@@ -83,8 +83,8 @@ $(document).ready(function() {
 
 		_objSlides = _prevSlider.addObjsToEdges(_objSlides);
 
-		_fadeBlock($('.wr-blocks-w'), 1, function() {
-			$('.wrapper').append(_templates.sliderList(_objSlides)).fadeIn(500, function() {	
+		_fadeBlock($('.js-prew-blocks-w'), 1, function() {
+			$('.js-wrapper').append(_templates.slider(_objSlides)).fadeIn(500, function() {	
 
 				_objSlides = _prevSlider.deleteSlidesFromEdges(_objSlides);
 
@@ -101,11 +101,11 @@ $(document).ready(function() {
 	$(document).on('click', '.js-step-down', function() {
 		var toBlock = $(this).data('to');
 
-		$('.wrapper').html(_returnBlock(toBlock, _templates, _objSlides));
+		$('.js-wrapper').html(_returnBlock(toBlock, _templates, _objSlides));
 	});
 
 	// Присваивание слайду свойства activе.
-	// слайд с таким св-вом появится первым при генерацции слайдера
+	// Слайд с таким св-вом появится первым при генерацции слайдера
 	function _changeActiveIndex(object, currentIndex, newActiveIndex) {
 		if (newActiveIndex !== currentIndex) {
 			delete object[currentIndex].active;

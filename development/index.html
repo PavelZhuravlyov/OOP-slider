@@ -7,50 +7,46 @@
 	<link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
-	<div class="wrapper">
-		<div class="loading loading-form">
-			<span class="loading-big"></span>
-			<span class="loading-small"></span>
-		</div>
+	<div class="wrapper js-wrapper">
 	</div>
 
-	<script id="inputLinks" type="text/x-handlebars-template">
-		<form action="#" class="wr-form_datas">
-			<input type="text" placeholder="Данные..." name="datas" class="wr-form_datas-inp" value />
-			<button class="wr-form_datas-btn js-save_datas">Сохранить</button>
+	<script id="links" type="text/x-handlebars-template">
+		<form action="#" class="input-form_datas js-input-form_datas">
+			<input type="text" placeholder="Данные..." name="datas" class="input-form_datas-inp" value />
+			<button class="input-form_datas-btn js-save_datas">Сохранить</button>
 		</form>
 	</script>
 
 	<script id="prewiews" type="text/x-handlebars-template">
-		<div class="wr-blocks-w">
-			<a href="#" class="js-step-down" data-to="inputLinks"><Вернуться к шагу 1</a>
+		<div class="prew-blocks-w js-prew-blocks-w">
+			<a href="#" class="step-down js-step-down" data-to="links"><Вернуться к шагу 1</a>
 			{{#each this}}
-				<div class="wr-block">
-					<div class="wr-block-img-w">
+				<div class="prew-block">
+					<div class="prew-block-img-w">
 						<div class="loading">
 							<span class="loading-big"></span>
 							<span class="loading-small"></span>
 						</div>
-						<img src="{{foto}}" alt="" class="wr-block-img"/>	
+						<img src="{{foto}}" alt="" class="prew-block-img"/>	
 					</div>
-					<form class="wr-block-comment">
-						<label class="wr-block-comment-lb">
-							<span class="wr-block-comment-lb-text">Комментарий:</span>
-							<input type="text" name="comment" data-comment="{{@index}}" class="wr-block-comment-lb-inp js-comment" value="{{comment}}"/>
+					<form class="prew-block-comment">
+						<label class="prew-block-comment-lb">
+							<span class="prew-block-comment-lb-text">Комментарий:</span>
+							<input type="text" name="comment" data-comment="{{@index}}" class="prew-block-comment-lb-inp js-comment" value="{{comment}}"/>
 						</label>
-						<label class="wr-block-comment-lb">
-							<span class="wr-block-comment-lb-text">Ссылка:</span>
-							<input type="text" name="link" data-link="{{@index}}" class="wr-block-link-lb-inp js-link" value="{{link}}"/>
+						<label class="prew-block-comment-lb">
+							<span class="prew-block-comment-lb-text">Ссылка:</span>
+							<input type="text" name="link" data-link="{{@index}}" class="prew-block-link-lb-inp js-link" value="{{link}}"/>
 						</label>
 					</form>
-					<a href="#" class="wr-block-delete js-delete_prewiev" data-item="{{@index}}">Удалить</a>
-					<label class="wr-block-select_active">
-						<input type="radio" name="activeSlide" value="{{@index}}" class="wr-block-select_active-radio js-active_btn" {{#if active}} checked="{{active}}" {{/if}}/>
-						<span class="wr-block-select_active-text">Сделать слайд активным <span class="small-round"></span></span>
+					<a href="#" class="prew-block-delete js-delete_prewiev" data-item="{{@index}}">Удалить</a>
+					<label class="prew-block-select_active">
+						<input type="radio" name="activeSlide" value="{{@index}}" class="prew-block-select_active-radio js-active_btn" {{#if active}} checked="{{active}}" {{/if}}/>
+						<span class="prew-block-select_active-text">Сделать слайд активным <span class="small-round"></span></span>
 					</label>
 				</div>
 			{{/each}}
-			<button class="wr-form_blocks-btn js-generate-slider">Сгенерировать слайдер</button>
+			<button class="prew-form_blocks-btn js-generate-slider">Сгенерировать слайдер</button>
 		</div>
 	</script>
 
@@ -61,10 +57,14 @@
 		</div>
 	</script>
 
-	<script id="sliderList" type="text/x-handlebars-template">
-		<a href="#" class="js-step-down" data-to="prewiews"><Вернуться к шагу 2</a>
+	<script id="slider" type="text/x-handlebars-template">
+		<a href="#" class="step-down js-step-down" data-to="prewiews"><Вернуться к шагу 2</a>
 		<div class="slider-main-w">
 			<div class="slider-w">
+				<div class="loading">
+					<span class="loading-big"></span>
+					<span class="loading-small"></span>
+				</div>
 				<ul class="slider">
 			    {{#each this}}
 			    	{{#if notReal}}
