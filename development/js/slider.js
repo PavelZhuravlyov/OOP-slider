@@ -8,14 +8,14 @@ function Slider($slider, options) {
 	  ballsBlock : 'slider-navigation',
 	  ballsClass : 'slider-navigation-circle',
 	  activePos : 0,
-	  timeStep : 3000,
+	  timeStep : 7000,
 	  slideWidth : this.arrSlides.outerWidth(),
 	  arrows : true
 	}, options);
 	this.slideWidth = this.settings.slideWidth;
-	this.indexActiveSlide = this.settings.activePos + 2;
-	this.slideStartIndex = 2;
-	this.slideEndIndex = this.countSlides - 1;
+	this.indexActiveSlide = this.settings.activePos + 1;
+	this.slideStartIndex = 1;
+	this.slideEndIndex = this.countSlides;
 	this.ballsBlock = $('.' + this.settings.ballsBlock);
 	this.arrayNavigElements = this.ballsBlock.children('.' + this.settings.ballsClass);
 	this.arrNavElLength = this.arrayNavigElements.length;
@@ -27,7 +27,10 @@ function Slider($slider, options) {
 // Добавляем кнопки передвижения, если в опциях указано arrows: true (по умолч)
 Slider.prototype.addArrows = function() {
 	if(this.settings.arrows){
-		this.slider.after('<a href="#" data-slide="1" class="slider-arrow"></a><a href="#" data-slide="-1" class="slider-arrow"></a>');
+		this.slider.after('\
+			<a href="#" data-slide="1" class="slider-arrow js-slider-arrow"></a>\
+			<a href="#" data-slide="-1" class="slider-arrow js-slider-arrow"></a>'
+			);
 	}
 };
 
@@ -35,7 +38,7 @@ Slider.prototype.addArrows = function() {
 // Слайд вычисляется по индексу, где индекс - это activePos в options
 // И перемещается на активный слайд
 Slider.prototype.setActiveSlide = function() {
-	this.slider.children('*[data-item="' + (this.settings.activePos + 2) + '"]').addClass(this.settings.activeClass);
+	this.slider.children('*[data-item="' + (this.settings.activePos + 1) + '"]').addClass(this.settings.activeClass);
 	this.move(this.indexActiveSlide);
 };
 
@@ -59,7 +62,7 @@ Slider.prototype.invisibleMoveSlider = function(indexPosition, movingPosition) {
 
 	this.move(indexPosition, function() {
 		_this.slider.css({
-			'left': -_this.slideWidth * movingPosition
+			left: -_this.slideWidth * movingPosition
 		});
 		_this.changeActiveSlide(movingPosition);
 	});
@@ -80,7 +83,7 @@ Slider.prototype.checkSlide = function(dataSlide) {
 	}	else {
 		this.move(nextSlide);
 		this.changeActiveSlide(nextSlide);
-		this.ballActivePos = nextSlide - 2;
+		this.ballActivePos = nextSlide - 1;
 	}	
 
 	this.ballsSetActive(this.ballActivePos, false);
@@ -117,9 +120,10 @@ Slider.prototype.ballsSetActive = function(dataSlide, moveSlider) {
 		ballsClass = this.settings.ballsClass,
 		ballsClassActive = ballsClass + '-active',
 		arrayBalls = this.arrayNavigElements,
+		arrBallsLength,
 		i;
 
-	for (i = 0; i < arrayBalls.length; i++) {
+	for (i = 0, arrBallsLength = arrayBalls.length; i < arrBallsLength; i++) {
 		if (arrayBalls.eq(i).hasClass(ballsClass)) {
 			arrayBalls.eq(i).removeClass(ballsClassActive);
 		}
@@ -128,7 +132,7 @@ Slider.prototype.ballsSetActive = function(dataSlide, moveSlider) {
 	if (moveSlider) {
 		this.move(dataSlide);
 		this.changeActiveSlide(dataSlide);
-		arrayBalls.eq(dataSlide - 2).addClass(ballsClassActive);
+		arrayBalls.eq(dataSlide - 1).addClass(ballsClassActive);
 	} else {
 		arrayBalls.eq(dataSlide).addClass(ballsClassActive);
 	}
@@ -141,7 +145,7 @@ Slider.prototype.changeOpacity = function() {
 	var _this = this;
 
 	setTimeout(function() {
-		_this.slider.css('opacity', 1);
+		_this.slider.css({opacity: 1});
 	}, 500);
 }
 
@@ -149,7 +153,7 @@ Slider.prototype.changeOpacity = function() {
 Slider.prototype.clickHandler = function() {
 	var _this = this;
 
-	$(document).on('click', '.slider-arrow', function() {
+	$(document).on('click', '.js-slider-arrow', function() {
 		var dataSlide = $(this).data('slide');
 
 		if (_this.flag) { 
@@ -166,7 +170,7 @@ Slider.prototype.clickHandler = function() {
 		return false;
 	});
 
-	$(document).on('click', '.slider-navigation-circle', function() {
+	$(document).on('click', '.js-nav-circle', function() {
 		var 
 			dataSlide = $(this).data('slide'),
 			ballsClassActive = _this.settings.ballsClass + '-active';
@@ -191,7 +195,7 @@ Slider.prototype.initSlider = function(){
 		throw new Error('Active position undefined');
 	}
 
-	if (this.countSlides == 4) {
+	if (this.countSlides == 2) {
 		this.ballsSetActive(this.settings.activePos);
 		this.setActiveSlide();	
 		this.changeOpacity();

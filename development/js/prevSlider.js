@@ -22,13 +22,14 @@ PrevSlider.prototype.arrayToArrObjs = function() {
 	var 
 		arrObjects = [],
 		arrUrls = this.stringToArray(),
+		arrUrlsLength,
 		i;
 
 	if (!arrUrls) {
 		return false;
 	}
 
-	for (i = 0; i < arrUrls.length; i++) {
+	for (i = 0, arrUrlsLength = arrUrls.length; i < arrUrlsLength; i++) {
 		arrObjects[i] = { 
 			foto: arrUrls[i],
 			comment: '',
@@ -54,31 +55,28 @@ PrevSlider.prototype.cloneObj = function(object) {
 	return newObj;
 };
 
-// Добавляем 2 последних объекта вперёд и 2 первых объекта вконец
+// Добавляем 1 последнего объекта вперёд и 1 первого объекта вконец
 PrevSlider.prototype.addObjsToEdges = function(arrObjects) {
 	var 
 		lengthArr = arrObjects.length - 1,
 		newArr = arrObjects.concat();
 
-	arrObjects.push(this.cloneObj(arrObjects[0]), this.cloneObj(arrObjects[1]));
-	arrObjects.unshift(this.cloneObj(arrObjects[lengthArr - 1]), this.cloneObj(arrObjects[lengthArr]));
+	arrObjects.push(this.cloneObj(arrObjects[0]));
+	arrObjects.unshift(this.cloneObj(arrObjects[lengthArr]))
 
 	lengthArr = arrObjects.length - 1;
 
 	arrObjects[0].notReal = true;
-	arrObjects[1].notReal = true;
 	arrObjects[lengthArr].notReal = true;
-	arrObjects[lengthArr - 1].notReal = true;
 
 	return arrObjects;
 };
 
+// Удаляем добавленные вначало и вконец объекты из общего массива объектов
 PrevSlider.prototype.deleteSlidesFromEdges = function(arrObjects) {
 	var lengthArr = arrObjects.length - 1;
 
 	arrObjects.splice(lengthArr, 1);
-	arrObjects.splice(lengthArr - 1, 1);
-	arrObjects.splice(1, 1);
 	arrObjects.splice(0, 1);
 
 	return arrObjects;

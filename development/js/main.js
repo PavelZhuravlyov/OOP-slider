@@ -39,10 +39,7 @@ $(document).ready(function() {
 	$(document).on('change', '.js-active_btn', function() {	
 		var numNewActive = $(this).val();
 
-		delete _objSlides[_activeIndex].active;
-
-		_activeIndex = (_activeIndex === numNewActive) ? _activeIndex : numNewActive;
-		_objSlides[_activeIndex].active = 'checked';
+		_activeIndex =_changeActiveIndex(_objSlides, _activeIndex, numNewActive);
 	});
 
 	$(document).on('click', '.js-delete_prewiev', function() {
@@ -51,11 +48,11 @@ $(document).ready(function() {
 			winScrTop = $(window).scrollTop(),
 			activePrev = $('.wr-block').eq(item).find('.js-active_btn').is(':checked');
 
-		if (activePrev) {
-			_activeIndex = 0;
-		}
-
 		_objSlides.splice(item, 1);
+
+		if (activePrev) {
+			_activeIndex = _changeActiveIndex(_objSlides, 0, 0);
+		}
 
 		$('.wrapper').html(_templates.prewiews(_objSlides));
 		$(window).scrollTop(winScrTop);
@@ -106,6 +103,19 @@ $(document).ready(function() {
 
 		$('.wrapper').html(_returnBlock(toBlock, _templates, _objSlides));
 	});
+
+	// Присваивание слайду свойства activе.
+	// слайд с таким св-вом появится первым при генерацции слайдера
+	function _changeActiveIndex(object, currentIndex, newActiveIndex) {
+		if (newActiveIndex !== currentIndex) {
+			delete object[currentIndex].active;
+			currentIndex = newActiveIndex;			
+		}
+
+		_objSlides[currentIndex].active = 'checked';
+
+		return currentIndex;
+	}
 
 	// функция, которая рендерит шаблон при возвращении к предыдущему шагу
 	function _returnBlock(nameTemp, myTemplates, options) {
