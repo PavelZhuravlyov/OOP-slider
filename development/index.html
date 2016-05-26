@@ -8,22 +8,22 @@
 </head>
 <body>
 	<div class="wrapper">
-		<form action="#" class="wr-form_datas">
-			<input type="text" placeholder="Данные..." name="datas" class="wr-form_datas-inp" value />
-			<button class="wr-form_datas-btn">Сохранить</button>
-		</form>
+		<div class="loading loading-form">
+			<span class="loading-big"></span>
+			<span class="loading-small"></span>
+		</div>
 	</div>
 
 	<script id="inputLinks" type="text/x-handlebars-template">
 		<form action="#" class="wr-form_datas">
 			<input type="text" placeholder="Данные..." name="datas" class="wr-form_datas-inp" value />
-			<button class="wr-form_datas-btn">Сохранить</button>
+			<button class="wr-form_datas-btn js-save_datas">Сохранить</button>
 		</form>
 	</script>
 
 	<script id="prewiews" type="text/x-handlebars-template">
 		<div class="wr-blocks-w">
-			<a href="#" class="step-down" data-to="inputLinks"><Вернуться к шагу 1</a>
+			<a href="#" class="js-step-down" data-to="inputLinks"><Вернуться к шагу 1</a>
 			{{#each this}}
 				<div class="wr-block">
 					<div class="wr-block-img-w">
@@ -36,21 +36,21 @@
 					<form class="wr-block-comment">
 						<label class="wr-block-comment-lb">
 							<span class="wr-block-comment-lb-text">Комментарий:</span>
-							<input type="text" name="comment" data-comment="{{@index}}" class="wr-block-comment-lb-inp" value="{{comment}}"/>
+							<input type="text" name="comment" data-comment="{{@index}}" class="wr-block-comment-lb-inp js-comment" value="{{comment}}"/>
 						</label>
 						<label class="wr-block-comment-lb">
 							<span class="wr-block-comment-lb-text">Ссылка:</span>
-							<input type="text" name="link" data-link="{{@index}}" class="wr-block-link-lb-inp" value="{{link}}"/>
+							<input type="text" name="link" data-link="{{@index}}" class="wr-block-link-lb-inp js-link" value="{{link}}"/>
 						</label>
 					</form>
-					<a href="#" class="wr-block-delete" data-item="{{@index}}">Удалить</a>
+					<a href="#" class="wr-block-delete js-delete_prewiev" data-item="{{@index}}">Удалить</a>
 					<label class="wr-block-select_active">
-						<input type="radio" name="activeSlide" value="{{@index}}" class="wr-block-select_active-radio"/>
+						<input type="radio" name="activeSlide" value="{{@index}}" class="wr-block-select_active-radio js-active_btn" {{#if active}} checked="{{active}}" {{/if}}/>
 						<span class="wr-block-select_active-text">Сделать слайд активным <span class="small-round"></span></span>
 					</label>
 				</div>
 			{{/each}}
-			<button class="wr-form_blocks-btn generate-slider">Сгенерировать слайдер</button>
+			<button class="wr-form_blocks-btn js-generate-slider">Сгенерировать слайдер</button>
 		</div>
 	</script>
 
@@ -62,27 +62,52 @@
 	</script>
 
 	<script id="sliderList" type="text/x-handlebars-template">
-		<a href="#" class="step-down" data-to="prewiews"><Вернуться к шагу 2</a>
+		<a href="#" class="js-step-down" data-to="prewiews"><Вернуться к шагу 2</a>
 		<div class="slider-main-w">
 			<div class="slider-w">
 				<ul class="slider">
-					{{addSlides this this.length}}
-					    {{#each this}}
-					        <li class="slider-img" data-item="{{@index}}">
-					        	{{#wrapLink link}}
-						        	<img src="{{foto}}" alt=""/>
-						        	{{#if comment}}
-										<div class="slider-img-comment">{{comment}}</div>
-									{{/if}}
-								{{/wrapLink}}
-					        </li>
-					    {{/each}}
-				    {{addSlides this 2}}
+			    {{#each this}}
+			    	{{#if notReal}}
+			    		<li class="slider-img">
+			        	{{#if link}}
+			        		<a href="{{link}}">
+					        	<img src="{{foto}}" alt=""/>
+					        	{{#if comment}}
+											<div class="slider-img-comment">{{comment}}</div>
+										{{/if}}
+									</a>
+								{{else}}
+									<img src="{{foto}}" alt=""/>
+					        	{{#if comment}}
+											<div class="slider-img-comment">{{comment}}</div>
+										{{/if}}
+								{{/if}}
+			        </li>
+			      {{else}}
+			        <li class="slider-img" data-item="{{@index}}">
+			        	{{#if link}}
+			        		<a href="{{link}}">
+					        	<img src="{{foto}}" alt=""/>
+					        	{{#if comment}}
+											<div class="slider-img-comment">{{comment}}</div>
+										{{/if}}
+									</a>
+								{{else}}
+									<img src="{{foto}}" alt=""/>
+					        	{{#if comment}}
+											<div class="slider-img-comment">{{comment}}</div>
+										{{/if}}
+								{{/if}}
+			        </li>
+			      {{/if}}
+			    {{/each}}
 				</ul>
 			</div>
 			<div class="slider-navigation">
 				{{#each this}}
-					<span class="slider-navigation-circle" data-slide="{{@index}}"></span>
+					{{#unless notReal}}
+						<span class="slider-navigation-circle" data-slide="{{@index}}"></span>
+					{{/unless}}
 				{{/each}}
 			</div>
 		</div>

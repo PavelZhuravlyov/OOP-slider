@@ -1,8 +1,8 @@
 // Обработчик ошибок
 function ErrorHandler(classErrWindow, templatePopUp) {
-	this.timeHide       = 2000;
+	this.timeHide = 2000;
 	this.classErrWindow = classErrWindow;
-	this.templatePopUp  = templatePopUp;
+	this.templatePopUp = templatePopUp;
 }
 
 // Рендеринг шаблона ошибок
@@ -12,11 +12,11 @@ ErrorHandler.prototype.newError = function(errorObject) {
 
 // Скрываем и удаляем плашку ошибки через timeHide 
 ErrorHandler.prototype.hideErrorWindow = function() {
-	var _errWindow = $(this.classErrWindow);
+	var errWindow = $(this.classErrWindow);
 
 	setTimeout(function() {
-		_errWindow.fadeOut(this.timeHide, function() {
-			_errWindow.remove();
+		errWindow.fadeOut(this.timeHide, function() {
+			errWindow.remove();
 		});
 	}, this.timeHide);
 };

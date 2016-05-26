@@ -3,61 +3,83 @@ function PrevSlider(arrayUrls) {
 	this.arrLength = arrayUrls.length;
 }
 
-// Удаляем из строки лишние символы
-PrevSlider.prototype.deleteTabs = function() {
-	var _arrayUrls = this.arrayUrls;
-	return _arrayUrls.replace(/\s|\[|\]|\'|\'/g, '');
-};
-
 // Формируем из строки массив
 PrevSlider.prototype.stringToArray = function() {
-	var _inputString = this.deleteTabs();
+	var inputString;
 
-	if (_inputString === '') return false;
-	_inputString = _inputString.split(',');
+	if (!this.arrayUrls) {
+		return false;
+	}
 
-	return _inputString;
+	inputString = JSON.parse(this.arrayUrls);
+
+	return inputString;
 };
 
 // Формируем массив объектов 
 // На вход индекс активного слайда(тот, который будет показываться первым)
 PrevSlider.prototype.arrayToArrObjs = function() {
-	var _arrObjects  = [],
-		  _arrUrls     = this.stringToArray();
+	var 
+		arrObjects = [],
+		arrUrls = this.stringToArray(),
+		i;
 
-	for (var i = 0; i < _arrUrls.length; i++) {
-		_arrObjects[i] = { 
-			foto: _arrUrls[i],
+	if (!arrUrls) {
+		return false;
+	}
+
+	for (i = 0; i < arrUrls.length; i++) {
+		arrObjects[i] = { 
+			foto: arrUrls[i],
 			comment: '',
 			link: ''
 		};
 	}
 	
-	return _arrObjects;
+	arrObjects[0].active = 'checked';
+
+	return arrObjects;
 };
 
-// Копирование массива объектов.
-// Для того, чтоб можно было перемещаться между шагами
-PrevSlider.prototype.copyArrayObjs = function(arrayObjs) {
-	if (!arrayObjs || 'object' !== typeof arrayObjs) {	
-	  return arrayObjs;
+// Клонирование объекта по значению
+PrevSlider.prototype.cloneObj = function(object) {
+	var 
+		newObj = {},
+		prop;
+
+	for (prop in object) {
+		newObj[prop] = object[prop];
 	}
 
-	var _newArray = ('function' === typeof arrayObjs.pop) ? [] : {};
-	var _prop, _value;
+	return newObj;
+};
 
-	for (_prop in arrayObjs) {
-		if (arrayObjs.hasOwnProperty(_prop)) {
-		  _value = arrayObjs[_prop];
-		  if (_value && 'object' === typeof _value) {
-			    _newArray[_prop] = this.copyArrayObjs(_value);
-			  } else {
-			    _newArray[_prop] = _value;
-			  }
-	    }
-	}
+// Добавляем 2 последних объекта вперёд и 2 первых объекта вконец
+PrevSlider.prototype.addObjsToEdges = function(arrObjects) {
+	var 
+		lengthArr = arrObjects.length - 1,
+		newArr = arrObjects.concat();
 
-	return _newArray;
+	arrObjects.push(this.cloneObj(arrObjects[0]), this.cloneObj(arrObjects[1]));
+	arrObjects.unshift(this.cloneObj(arrObjects[lengthArr - 1]), this.cloneObj(arrObjects[lengthArr]));
 
-	 // return [].concat(arrayObjs); // если надо будет сохранять уже записанные поля
+	lengthArr = arrObjects.length - 1;
+
+	arrObjects[0].notReal = true;
+	arrObjects[1].notReal = true;
+	arrObjects[lengthArr].notReal = true;
+	arrObjects[lengthArr - 1].notReal = true;
+
+	return arrObjects;
+};
+
+PrevSlider.prototype.deleteSlidesFromEdges = function(arrObjects) {
+	var lengthArr = arrObjects.length - 1;
+
+	arrObjects.splice(lengthArr, 1);
+	arrObjects.splice(lengthArr - 1, 1);
+	arrObjects.splice(1, 1);
+	arrObjects.splice(0, 1);
+
+	return arrObjects;
 };
