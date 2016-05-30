@@ -62,7 +62,7 @@ Slider.prototype.invisibleMoveSlider = function(indexPosition, movingPosition) {
 
 	this.move(indexPosition, function() {
 		_this.slider.css({
-			left: -_this.slideWidth * movingPosition
+			left: -(_this.slideWidth * movingPosition)
 		});
 		_this.changeActiveSlide(movingPosition);
 	});
@@ -189,8 +189,6 @@ Slider.prototype.clickHandler = function() {
 
 // Инициализация слайдера
 Slider.prototype.initSlider = function(){
-	var _this = this;
-
 	if ((this.settings.activePos > this.arrSlidesDef.length) || (this.settings.activePos < 0)) {
 		throw new Error('Active position undefined');
 	}

@@ -1,13 +1,13 @@
 // Обработчик ошибок
-function ErrorHandler(classErrWindow, templatePopUp) {
+function ErrorHandler(classErrWindow, templateError) {
 	this.timeHide = 2000;
 	this.classErrWindow = classErrWindow;
-	this.templatePopUp = templatePopUp;
+	this.templateError = templateError;
 }
 
 // Рендеринг шаблона ошибок
 ErrorHandler.prototype.newError = function(errorObject) {
-	return this.templatePopUp(errorObject);
+	return this.templateError(errorObject);
 };
 
 // Скрываем и удаляем плашку ошибки через timeHide 

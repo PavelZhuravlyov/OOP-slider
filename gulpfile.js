@@ -32,7 +32,7 @@
     });
 
     gulp.task('concatJS', function() {
-      return gulp.src(['./development/js/error.js', './development/js/slider.js', './development/js/prevSlider.js', './development/js/main.js'])
+      return gulp.src(['./development/js/error.js', './development/js/slider.js', './development/js/SlidesPreview.js', './development/js/main.js'])
             .pipe(sourcemaps.init())
             .pipe(concat('main.js'))
             .pipe(sourcemaps.write())
