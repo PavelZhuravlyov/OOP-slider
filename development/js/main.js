@@ -87,7 +87,7 @@ $(document).ready(function() {
 
 		_slider = new Slider($('.slider'), {
 			activeClass: 'slider-active',
-			activePos: _activeIndex,
+			activePos: _activeIndex
 		});
 
 		_slider.initSlider();

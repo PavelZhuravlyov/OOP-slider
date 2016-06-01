@@ -118,7 +118,7 @@ Slider.prototype.ballsSetActive = function(dataSlide, moveSlider) {
 		arrBallsLength,
 		i;
 
-	if (!this.settings.balls) {
+	if (!this.arrayNavigElements) {
 		return false;
 	}
 
@@ -184,7 +184,7 @@ Slider.prototype.initSlider = function(){
 		throw new Error('Active position undefined');
 	}
 
-	if (this.countSlides === 2) {
+	if (this.countSlides == 2) {
 		this.ballsSetActive(this.settings.activePos);
 		this.setActiveSlide();	
 
