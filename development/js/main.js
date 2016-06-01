@@ -79,6 +79,10 @@ $(document).ready(function() {
 			}, 'Data is empty');
 		}
 
+		if (_objSlides.slides.length <= 1) {
+			_objSlides.optionsSlider.arrows = false;
+		}	
+
 		_arrSlides = _slidesPreview.addObjsToEdges(_arrSlides);
 
 		$('.js-wrapper').html(_templates.slider(_objSlides));	
@@ -96,7 +100,10 @@ $(document).ready(function() {
 	$(document).on('click', '.js-step-down', function() {
 		var toBlock = $(this).data('to');
 
-		_activeIndex = 0;
+		if (toBlock === 'links') {
+			_activeIndex = 0;
+		}
+
 		$('.js-wrapper').html(_templates[toBlock](_arrSlides));
 	});
 })();

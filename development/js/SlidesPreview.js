@@ -93,17 +93,24 @@ SlidesPreview.prototype.changeActiveIndex = function(arrObjects, currentIndex, n
 	return currentIndex;
 };
 
+// Проверка кол-ва слайдов
+// Если слайд один, то нужно будет убрать опцию стрелок
+SlidesPreview.prototype.onlyOneSlide = function(arrObjects) {
+	if (arrObjects <= 1) {
+		return true;
+	}
+};
+
 // Удаление объекта из массива
 // Возвращает индекс активного объекта
 SlidesPreview.prototype.deleteObjectFromArray = function(arrObjects, indexDeleteObj, activeIndex) {
+	arrObjects.splice(indexDeleteObj, 1);
+
 	if (indexDeleteObj === activeIndex) {
-		this.changeActiveIndex(arrObjects, 0, 0);
-		activeIndex = 0;
+		activeIndex = this.changeActiveIndex(arrObjects, 0, 0);
 	} else if (indexDeleteObj < activeIndex) {
 		activeIndex -= 1;
 	}
-
-	arrObjects.splice(indexDeleteObj, 1);
 
 	return activeIndex;
 };
