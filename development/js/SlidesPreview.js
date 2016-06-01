@@ -20,6 +20,7 @@ SlidesPreview.prototype.stringToArray = function() {
 // На вход индекс активного слайда(тот, который будет показываться первым)
 SlidesPreview.prototype.arrayToArrObjs = function() {
 	var 
+		mainObj = {},
 		arrObjects = [],
 		arrUrls = this.stringToArray(),
 		arrUrlsLength,
@@ -37,7 +38,9 @@ SlidesPreview.prototype.arrayToArrObjs = function() {
 	
 	arrObjects[0].active = 'checked';
 
-	return arrObjects;
+	mainObj.slides = arrObjects; 
+
+	return mainObj;
 };
 
 // Клонирование объекта по значению
@@ -55,9 +58,7 @@ SlidesPreview.prototype.cloneObj = function(object) {
 
 // Добавляем 1 последнего объекта вперёд и 1 первого объекта вконец
 SlidesPreview.prototype.addObjsToEdges = function(arrObjects) {
-	var 
-		lengthArr = arrObjects.length - 1,
-		newArr = arrObjects.concat();
+	var lengthArr = arrObjects.length - 1;
 
 	arrObjects.push(this.cloneObj(arrObjects[0]));
 	arrObjects.unshift(this.cloneObj(arrObjects[lengthArr]))

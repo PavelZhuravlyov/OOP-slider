@@ -8,27 +8,35 @@ $(document).ready(function() {
 			prewiews: Handlebars.compile($('#prewiews').html()),
 			slider: Handlebars.compile($('#slider').html())
 	  },
+		_optionsSlider = {
+			arrows: true,
+			balls: true
+		},
 	  _errorHandler = new ErrorHandler('.error-popup', _templates.error),
 		_activeIndex = 0,
 		_slidesPreview,
-		_objSlides;
+		_arrSlides,
+		_objSlides,
+		_slider;
 
 	$('.js-wrapper').html(_templates.links());
 
 	$(document).on('click', '.js-save_data', function() {
 		var inputStr = $('.input-form_data-inp').val();
 		
-		_slidesPreview = new SlidesPreview(inputStr);
-		_objSlides = _slidesPreview.arrayToArrObjs(); 
-
-		if (!_objSlides.length) {
+		if (!inputStr.length) {
 			_errorHandler.generateError({
 				title: 'Ошибка', 
 				message: 'Введите данные'
 			}, 'Data is empty');
 		}
+		
+		_slidesPreview = new SlidesPreview(inputStr);
+		_objSlides = _slidesPreview.arrayToArrObjs(); 
+		_objSlides.optionsSlider = _optionsSlider;
+		_arrSlides = _objSlides.slides;
 
-		$('.js-wrapper').html(_templates.prewiews(_objSlides));
+		$('.js-wrapper').html(_templates.prewiews(_arrSlides));
 		
 		return false;
 	});
@@ -36,17 +44,17 @@ $(document).ready(function() {
 	$(document).on('change', '.js-active_btn', function() {	
 		var numNewActive = parseInt($(this).val());
 
-		_activeIndex = _slidesPreview.changeActiveIndex(_objSlides, _activeIndex, numNewActive);
+		_activeIndex = _slidesPreview.changeActiveIndex(_arrSlides, _activeIndex, numNewActive);
 	});
 
-	$(document).on('click', '.js-delete_prewiev', function() {
+	$(document).on('click', '.js-delete_preview', function() {
 		var 
 			item = parseInt($(this).data('item')),
 			winScrTop = $(window).scrollTop();
 
-		_activeIndex = _slidesPreview.deleteObjectFromArray(_objSlides, item, _activeIndex);
+		_activeIndex = _slidesPreview.deleteObjectFromArray(_arrSlides, item, _activeIndex);
 		
-		$('.js-wrapper').html(_templates.prewiews(_objSlides));
+		$('.js-wrapper').html(_templates.prewiews(_arrSlides));
 		$(window).scrollTop(winScrTop);
 
 		return false;
@@ -58,48 +66,38 @@ $(document).ready(function() {
 			dataName = $this.attr('name'), 
 			numberObj = $this.data(dataName);
 
-		_objSlides[numberObj][dataName] = $this.val();
+		_arrSlides[numberObj][dataName] = $this.val();
 	});
 
 	$(document).on('click', '.js-generate-slider', function() {
-		var slider;
+		_activeIndex = _activeIndex || 0;
 
-		_activeIndex = parseInt(_activeIndex) || 0;
-
-		if (!_objSlides.length) {
+		if (!_arrSlides.length) {
 			_errorHandler.generateError({
 				title: 'Ошибка', 
 				message: 'Нет ни одного слайда'
 			}, 'Data is empty');
 		}
 
-		_objSlides = _slidesPreview.addObjsToEdges(_objSlides);
+		_arrSlides = _slidesPreview.addObjsToEdges(_arrSlides);
 
 		$('.js-wrapper').html(_templates.slider(_objSlides));	
 
-		_objSlides = _slidesPreview.deleteSlidesFromEdges(_objSlides);
+		_arrSlides = _slidesPreview.deleteSlidesFromEdges(_arrSlides);
 
-		slider = new Slider($('.slider'), {
+		_slider = new Slider($('.slider'), {
 			activeClass: 'slider-active',
-			activePos: _activeIndex
+			activePos: _activeIndex,
 		});
 
-		slider.initSlider();
+		_slider.initSlider();
 	});
 
 	$(document).on('click', '.js-step-down', function() {
 		var toBlock = $(this).data('to');
 
-		$('.js-wrapper').html(_returnBlock(toBlock, _templates, _objSlides));
+		_activeIndex = 0;
+		$('.js-wrapper').html(_templates[toBlock](_arrSlides));
 	});
-
-	// функция, которая рендерит шаблон при возвращении к предыдущему шагу
-	function _returnBlock(nameTemp, myTemplates, data) {
-		var data = data || {};
-
-		if (myTemplates.hasOwnProperty(nameTemp)) {
-			return myTemplates[nameTemp](data);
-		}
-	}
 })();
 });

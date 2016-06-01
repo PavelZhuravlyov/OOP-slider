@@ -1,50 +1,32 @@
 function Slider($slider, options) {
 	this.slider = $slider;
 	this.arrSlides = this.slider.children();
-	this.arrSlidesDef = this.arrSlides;
 	this.countSlides = this.arrSlides.length - 1;
 	this.settings = $.extend({
 	  activeClass : 'slider-active',
 	  ballsBlock : 'slider-navigation',
 	  ballsClass : 'slider-navigation-circle',
 	  activePos : 0,
-	  timeStep : 7000,
-	  slideWidth : this.arrSlides.outerWidth(),
-	  arrows : true
+	  timeStep : 7000
 	}, options);
-	this.slideWidth = this.settings.slideWidth;
+	this.slideWidth = this.arrSlides.outerWidth();
 	this.indexActiveSlide = this.settings.activePos + 1;
-	this.slideStartIndex = 1;
-	this.slideEndIndex = this.countSlides;
 	this.ballsBlock = $('.' + this.settings.ballsBlock);
 	this.arrayNavigElements = this.ballsBlock.children('.' + this.settings.ballsClass);
 	this.arrNavElLength = this.arrayNavigElements.length;
 	this.ballActivePos = this.settings.activePos;
-	this.interval,
 	this.flag = false;
+	this.startInit = true;
+	this.currentSlideIndex = this.settings.activePos + 1;
+	this.interval;
 }
-
-// Добавляем кнопки передвижения, если в опциях указано arrows: true (по умолч)
-Slider.prototype.addArrows = function() {
-	if(this.settings.arrows){
-		this.slider.after('\
-			<a href="#" data-slide="1" class="slider-arrow js-slider-arrow"></a>\
-			<a href="#" data-slide="-1" class="slider-arrow js-slider-arrow"></a>'
-			);
-	}
-};
 
 // Установить астивный класс на слайд
 // Слайд вычисляется по индексу, где индекс - это activePos в options
 // И перемещается на активный слайд
 Slider.prototype.setActiveSlide = function() {
-	this.slider.children('*[data-item="' + (this.settings.activePos + 1) + '"]').addClass(this.settings.activeClass);
+	this.arrSlides.eq(this.settings.activePos + 1).addClass(this.settings.activeClass);
 	this.move(this.indexActiveSlide);
-};
-
-// Узнать индекс текущего активного слайда
-Slider.prototype.getIndexActiveSlide = function() {
-	return this.slider.children('.' + this.settings.activeClass).index();
 };
 
 // Сбросить со всех слайдов активный класс
@@ -58,13 +40,13 @@ Slider.prototype.changeActiveSlide = function(nextSlide) {
 // Делается для того, чтобы переместить слайдер, когда 
 // он достиг или последнего, или первого слайда
 Slider.prototype.invisibleMoveSlider = function(indexPosition, movingPosition) {
-	var _this = this;
+	var self = this;
 
 	this.move(indexPosition, function() {
-		_this.slider.css({
-			left: -(_this.slideWidth * movingPosition)
+		self.slider.css({
+			left: -(self.slideWidth * movingPosition)
 		});
-		_this.changeActiveSlide(movingPosition);
+		self.changeActiveSlide(movingPosition);
 	});
 };
 
@@ -72,15 +54,20 @@ Slider.prototype.invisibleMoveSlider = function(indexPosition, movingPosition) {
 Slider.prototype.checkSlide = function(dataSlide) {
 	var 
 		dataSlide = dataSlide || 1,
-		nextSlide = this.getIndexActiveSlide() + dataSlide;
+		nextSlide = this.currentSlideIndex + dataSlide,
+		slideStartIndex = 1,
+		slideEndIndex = this.countSlides;
 
-	if (nextSlide === this.slideEndIndex) {
-		this.invisibleMoveSlider(nextSlide, this.slideStartIndex);
+	if (nextSlide === slideEndIndex) {
+		this.invisibleMoveSlider(nextSlide, slideStartIndex);
+		this.currentSlideIndex = 1;
 		this.ballActivePos = 0;
-	} else if (nextSlide === (this.slideStartIndex - 1)) {
-		this.invisibleMoveSlider(nextSlide, this.slideEndIndex - 1);	
+	} else if (nextSlide === 0) {
+		this.currentSlideIndex = slideEndIndex-1;
+		this.invisibleMoveSlider(nextSlide, slideEndIndex - 1);	
 		this.ballActivePos = this.arrNavElLength - 1;
 	}	else {
+		this.currentSlideIndex = (dataSlide > 0) ? this.currentSlideIndex += 1 : this.currentSlideIndex -= 1;
 		this.move(nextSlide);
 		this.changeActiveSlide(nextSlide);
 		this.ballActivePos = nextSlide - 1;
@@ -92,12 +79,20 @@ Slider.prototype.checkSlide = function(dataSlide) {
 // Плавное перемещение слайдера
 // Параметры: indexPos - индекс активного слайда
 Slider.prototype.move = function(indexPos, callback) {
-	var _this = this;
+	var self = this;
+
+	// Не плавное перемещение слайдера при инициализации
+	if (this.startInit) {
+		this.slider.css({
+			'left': -(self.slideWidth * indexPos)
+		});
+		this.startInit = false;
+	}
 
 	this.slider.transition({
-		'left': -_this.slideWidth * indexPos
+		'left': -(self.slideWidth * indexPos)
 	}, 500, function() {
-		_this.flag = false;
+		self.flag = false;
 
 		if (callback && typeof callback === 'function') {
 			callback();
@@ -107,11 +102,11 @@ Slider.prototype.move = function(indexPos, callback) {
 
 // Инициализация таймера для автономного перемещения слайдера
 Slider.prototype.startTimer = function(timer, func) {
-	var _this = this;
+	var self = this;
 
 	return setInterval(function() {
-				_this.checkSlide();
-			}, _this.settings.timeStep);
+					self.checkSlide();
+				 }, self.settings.timeStep);
 };
 
 // Работа с нижней навигацией(установка, перемещение к соответствующему шарику слайду)
@@ -122,6 +117,10 @@ Slider.prototype.ballsSetActive = function(dataSlide, moveSlider) {
 		arrayBalls = this.arrayNavigElements,
 		arrBallsLength,
 		i;
+
+	if (!this.settings.balls) {
+		return false;
+	}
 
 	for (i = 0, arrBallsLength = arrayBalls.length; i < arrBallsLength; i++) {
 		if (arrayBalls.eq(i).hasClass(ballsClass)) {
@@ -140,32 +139,23 @@ Slider.prototype.ballsSetActive = function(dataSlide, moveSlider) {
 	this.ballActivePos = dataSlide + 1;
 };
 
-// Эффект появления слайдера во время инициализации
-Slider.prototype.changeOpacity = function() {
-	var _this = this;
-
-	setTimeout(function() {
-		_this.slider.css({opacity: 1});
-	}, 500);
-}
-
 // Обработчик клика на кнопки переключения
 Slider.prototype.clickHandler = function() {
-	var _this = this;
+	var self = this;
 
 	$(document).on('click', '.js-slider-arrow', function() {
 		var dataSlide = $(this).data('slide');
 
-		if (_this.flag) { 
+		if (self.flag) { 
 			return false;
 		}
 
-		_this.flag = true;
+		self.flag = true;
 
-		clearInterval(_this.interval);
-		_this.checkSlide(dataSlide);
-		_this.ballsSetActive(_this.ballActivePos - 1, false);
-		_this.interval = _this.startTimer(_this.interval);
+		clearInterval(self.interval);
+		self.checkSlide(dataSlide);
+		self.ballsSetActive(self.ballActivePos - 1, false);
+		self.interval = self.startTimer(self.interval);
 
 		return false;
 	});
@@ -173,15 +163,16 @@ Slider.prototype.clickHandler = function() {
 	$(document).on('click', '.js-nav-circle', function() {
 		var 
 			dataSlide = $(this).data('slide'),
-			ballsClassActive = _this.settings.ballsClass + '-active';
+			ballsClassActive = self.settings.ballsClass + '-active';
 
 		if ($(this).hasClass(ballsClassActive)) {
 			return false;
 		} 
 
-		clearInterval(_this.interval);
-		_this.ballsSetActive(dataSlide, true);
-		_this.interval = _this.startTimer(_this.interval);
+		self.currentSlideIndex = parseInt(dataSlide);
+		clearInterval(self.interval);
+		self.ballsSetActive(dataSlide, true);
+		self.interval = self.startTimer(self.interval);
 
 		return false;
 	});
@@ -189,21 +180,19 @@ Slider.prototype.clickHandler = function() {
 
 // Инициализация слайдера
 Slider.prototype.initSlider = function(){
-	if ((this.settings.activePos > this.arrSlidesDef.length) || (this.settings.activePos < 0)) {
+	if ((this.settings.activePos > this.arrSlides.length) || (this.settings.activePos < 0)) {
 		throw new Error('Active position undefined');
 	}
 
-	if (this.countSlides == 2) {
+	if (this.countSlides === 2) {
 		this.ballsSetActive(this.settings.activePos);
 		this.setActiveSlide();	
-		this.changeOpacity();
+
 		return false;
 	}
 
-	this.addArrows();
 	this.setActiveSlide();	
 	this.clickHandler();
 	this.ballsSetActive(this.settings.activePos);
-	this.changeOpacity();
 	this.interval = this.startTimer(this.interval);
 };
